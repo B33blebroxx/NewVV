@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useAuth } from './context/authContext';
 import Loading from '../components/Loading';
 import Signin from '../components/Signin';
-import NavBar from '../components/NavBar';
+import NavBar from '../components/drawers/NavBar';
 
 const ViewDirectorBasedOnUserAuthStatus = ({ component: Component, pageProps }) => {
   const { user, userLoading } = useAuth();

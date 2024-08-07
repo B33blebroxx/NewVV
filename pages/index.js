@@ -11,10 +11,10 @@ function Home() {
       </div>
       <br />
       <div>
-        <Card>
+        <Card id="mission-statement-card">
           <h1>Welcome to ValVenis.com!</h1>
           <br />
-          <h5>Our mission is to create a safe, inclusive, and supportive online space for LGBTQIA+ individuals. We aim to connect people with essential resources, information, and communities that uplift and empower them. Our goal is to ensure that every person can access the support they need to thrive, celebrate their identity, and build a fulfilling life.</h5>
+          <h5>Our mission is to create a safe, inclusive, and supportive online space for LGBTQIA+ individuals. We aim to connect those in need with essential resources, information, and communities that uplift and empower them. Our goal is to ensure that every person can access the support they need to thrive, celebrate their identity, and build a fulfilling life.</h5>
         </Card>
       </div>
     </div>
