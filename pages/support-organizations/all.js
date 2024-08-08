@@ -1,6 +1,6 @@
 import React from 'react';
 import { Divider } from '@mui/material';
-import AccordionUsage from '../../components/accordians/OrgAcordian';
+import AccordionUsage from '../../components/accordians/OrgAccordion';
 
 export default function SupportOrganizationsPage() {
   return (
