@@ -9,8 +9,10 @@ import {
   ListItemText,
   Divider,
   Button,
+  Tooltip,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import AdminPanelSettingsSharpIcon from '@mui/icons-material/AdminPanelSettingsSharp';
 import PropTypes from 'prop-types';
 import Image from 'next/image';
 import logo from '../../utils/data/ValVenisLogo.png';
@@ -25,7 +27,7 @@ export default function NavBar({ onAdminClick }) {
   const NavList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       {/* Logo at the top */}
-      <Box sx={{ textAlign: 'center', my: 3 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
         <Image
           src={logo}
           alt="Logo"
@@ -37,7 +39,7 @@ export default function NavBar({ onAdminClick }) {
       <List>
         {[
           { text: 'Home', href: '/' },
-          { text: 'Support Organizations', href: '/organizations' },
+          { text: 'Support Organizations', href: '../support-organizations/all' },
           {
             text: 'The Trevor Project',
             href: 'https://www.thetrevorproject.org/',
@@ -52,22 +54,25 @@ export default function NavBar({ onAdminClick }) {
           <Link key={text} href={href} passHref>
             <ListItem disablePadding>
               <ListItemButton component="a">
-                <ListItemText primary={text} />
+                <ListItemText primary={text} sx={{ textAlign: 'center' }} />
               </ListItemButton>
             </ListItem>
           </Link>
         ))}
       </List>
       <Divider />
-      {/* Admin Button */}
-      <Box sx={{ textAlign: 'center', my: 2 }}>
-        <Button variant="contained" color="primary" onClick={onAdminClick}>
-          Admin
-        </Button>
+      <Box sx={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center', my: 3,
+      }}
+      >
+        <Tooltip title="Admin">
+          <Button variant="outlined" color="primary" onClick={onAdminClick}>
+            <AdminPanelSettingsSharpIcon />
+          </Button>
+        </Tooltip>
       </Box>
     </Box>
   );
-
   return (
     <div>
       <Button onClick={toggleDrawer(true)}>
