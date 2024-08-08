@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import Accordion from '@mui/material/Accordion';
 import AccordionActions from '@mui/material/AccordionActions';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -8,6 +8,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Image } from 'react-bootstrap';
 import getOrgs from '../../api/supportOrgApi';
 
+// This component displays a list of organizations and their details/contact info in an accordion format.
 export default function OrgAccordion() {
   const [organizations, setOrganizations] = useState([]);
 
@@ -20,13 +21,15 @@ export default function OrgAccordion() {
   }, []);
 
   return (
-    <div>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       {organizations.map((org) => (
         <Accordion
           sx={{
             background: 'rgba( 255, 255, 255, 0.25 )',
             boxShadow: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
-            'backdrop-filter': 'blur( 5.5px )',
+            backdropFilter: 'blur( 5.5px )',
+            width: '80%',
+            alignItems: 'center',
           }}
           className="accordian"
           key={org.id}
@@ -40,15 +43,20 @@ export default function OrgAccordion() {
             }}
             className="accordion-summary"
           >
-            <div style={{ width: '100%', textAlign: 'center' }}>
-              {org.supportOrgName}
-            </div>
+            <Box style={{ width: '100%', textAlign: 'center' }}>
+              <h5>
+                {org.supportOrgName}
+              </h5>
+            </Box>
           </AccordionSummary>
-          <AccordionDetails sx={{ display: 'flex', textAlign: 'center' }}>
-            <div>
+          <AccordionDetails sx={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
+            <Box>
               <Image src={org.supportOrgLogo} alt={`${org.supportOrgName} logo`} style={{ width: '35%', height: '55%' }} />
-              <p>{org.supportOrgSummary}</p>
-            </div>
+            </Box>
+            <br />
+            <Box>
+              <p style={{ maxWidth: '90%', paddingLeft: '10%' }}>{org.supportOrgSummary}</p>
+            </Box>
           </AccordionDetails>
           <AccordionActions sx={{ display: 'flex', justifyContent: 'center' }}>
             <Button variant="text" href={`tel:${org.supportOrgPhone}`}>Phone Support</Button>
@@ -56,6 +64,6 @@ export default function OrgAccordion() {
           </AccordionActions>
         </Accordion>
       ))}
-    </div>
+    </Box>
   );
 }
