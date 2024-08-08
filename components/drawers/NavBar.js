@@ -17,6 +17,7 @@ import PropTypes from 'prop-types';
 import Image from 'next/image';
 import logo from '../../utils/data/ValVenisLogo.png';
 
+// This component is a collapsible navigation bar that appears on the left side of the screen when the user clicks the menu icon. It includes internal and external links to various pages on the site, as well as a button that opens the admin panel.
 export default function NavBar({ onAdminClick }) {
   const [open, setOpen] = React.useState(false);
 
@@ -48,7 +49,7 @@ export default function NavBar({ onAdminClick }) {
             text: 'Advocates for Trans Equality',
             href: 'https://transequality.org/',
           },
-          { text: 'Quotes', href: '/quotes' },
+          { text: 'Quotes', href: '../quotes/all' },
           { text: 'About Me', href: '/aboutme' },
         ].map(({ text, href }) => (
           <Link key={text} href={href} passHref>

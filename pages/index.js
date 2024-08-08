@@ -1,9 +1,11 @@
 import React from 'react';
-import { Card } from 'react-bootstrap';
+import { Card } from '@mui/material';
+import PropTypes from 'prop-types';
 import Image from 'next/image';
 import logo from '../utils/data/ValVenisLogo.png';
+import MissionStatement from '../components/cards/MissionStatement';
 
-function Home() {
+function Home({ missionStatement }) {
   return (
     <div className="container">
       <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -14,7 +16,9 @@ function Home() {
         <Card id="mission-statement-card">
           <h1>Welcome to ValVenis.com!</h1>
           <br />
-          <h5>Our mission is to create a safe, inclusive, and supportive online space for LGBTQIA+ individuals. We aim to connect those in need with essential resources, information, and communities that uplift and empower them. Our goal is to ensure that every person can access the support they need to thrive, celebrate their identity, and build a fulfilling life.</h5>
+          <h5>
+            <MissionStatement missionStatement={missionStatement} />
+          </h5>
         </Card>
       </div>
     </div>
@@ -22,3 +26,11 @@ function Home() {
 }
 
 export default Home;
+
+Home.propTypes = {
+  missionStatement: PropTypes.string,
+};
+
+Home.defaultProps = {
+  missionStatement: '',
+};
