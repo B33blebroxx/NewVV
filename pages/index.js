@@ -1,36 +1,38 @@
 import React from 'react';
-import { Card } from '@mui/material';
+import { Box } from '@mui/material';
 import PropTypes from 'prop-types';
 import Image from 'next/image';
 import logo from '../utils/data/ValVenisLogo.png';
-import MissionStatement from '../components/cards/MissionStatement';
+import MissionStatement from '../components/cards/MissionStatementCard';
 
 function Home({ missionStatement }) {
   return (
-    <div className="container">
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <Box className="container">
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <Image src={logo} alt="Logo" width={300} height={250} style={{ marginBottom: '20px' }} />
-      </div>
+      </Box>
       <br />
-      <div>
-        <Card id="mission-statement-card">
-          <h1>Welcome to ValVenis.com!</h1>
-          <br />
-          <h5>
-            <MissionStatement missionStatement={missionStatement} />
-          </h5>
-        </Card>
-      </div>
-    </div>
+      <Box>
+        <MissionStatement missionStatement={missionStatement} />
+      </Box>
+    </Box>
   );
 }
 
 export default Home;
 
 Home.propTypes = {
-  missionStatement: PropTypes.string,
+  missionStatement: PropTypes.shape({
+    missionStatementText: PropTypes.string.isRequired,
+    missionStatementAcronym: PropTypes.string.isRequired,
+    welcomeMessage: PropTypes.string.isRequired,
+  }),
 };
 
 Home.defaultProps = {
-  missionStatement: '',
+  missionStatement: {
+    missionStatementText: 'Mission Statement Text',
+    missionStatementAcronym: 'Mission Statement Acronym',
+    welcomeMessage: 'Welcome Message',
+  },
 };

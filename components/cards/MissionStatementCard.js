@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Card } from '@mui/material';
 import getMissionStatement from '../../api/missionStatementApi';
 
 export default function MissionStatement() {
@@ -8,15 +9,22 @@ export default function MissionStatement() {
     getMissionStatement().then(setMissionStatement);
   };
 
-  useState(() => {
+  useEffect(() => {
     fetchMissionStatement();
   }, []);
 
   return (
-    <div>
+    <Card id="mission-statement-card">
+      <h1>{missionStatement.welcomeMessage}</h1>
+      <br />
       <h5>
         {missionStatement.missionStatementText}
       </h5>
-    </div>
+      <br />
+      <br />
+      <h6>
+        {missionStatement.missionStatementAcronym}
+      </h6>
+    </Card>
   );
 }
