@@ -12,7 +12,6 @@ export default function QuotePage() {
 
   useState(() => {
     fetchQuotes();
-    console.log(quotes);
   });
 
   return (

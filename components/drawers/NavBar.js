@@ -50,7 +50,8 @@ export default function NavBar({ onAdminClick }) {
             href: 'https://transequality.org/',
           },
           { text: 'Quotes', href: '../quotes/all' },
-          { text: 'About Me', href: '/aboutme' },
+          { text: 'About Me', href: '/aboutMe' },
+          { text: 'Shop', href: 'https://val-venis.printify.me/products' },
         ].map(({ text, href }) => (
           <Link key={text} href={href} passHref>
             <ListItem disablePadding>
