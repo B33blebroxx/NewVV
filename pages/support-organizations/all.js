@@ -1,18 +1,47 @@
-import React from 'react';
-import { Divider } from '@mui/material';
-import AccordionUsage from '../../components/accordians/OrgAccordion';
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { Box, Divider } from '@mui/material';
+import getOrgs from '../../api/supportOrgApi';
+import OrgAccordion from '../../components/accordians/OrgAccordion';
+import { getSupportPageData } from '../../api/supportPageApi';
 
 export default function SupportOrganizationsPage() {
+  const [pageData, setPageData] = useState({});
+  const [organizations, setOrganizations] = useState([]);
+
+  const fetchOrgs = async () => {
+    getOrgs().then(setOrganizations);
+  };
+
+  const fetchPageData = async () => {
+    getSupportPageData().then(setPageData);
+  };
+
+  useEffect(() => {
+    fetchOrgs();
+  }, []);
+
+  useEffect(() => {
+    fetchPageData();
+  }, []);
+
   return (
-    <div>
+    <Box>
       <br /><br />
-      <h1 style={{ textAlign: 'center' }}>Support Organizations</h1>
+      <h1 style={{ textAlign: 'center' }}>{pageData.supportPageHeader}</h1>
       <br />
-      <h4 style={{ textAlign: 'center' }}>Welcome to our Support Organizations page. Here, you can find a curated list of organizations that offer essential services and support. Each entry provides detailed information about the organization, including their mission, contact details, and a link to their website. Click on each organization to learn more about the vital support they offer and how you can connect with them.</h4>
+      <h4 style={{ textAlign: 'center' }}>{pageData.supportPageIntro}</h4>
       <br />
       <Divider sx={{ backgroundColor: 'black' }} />
       <br /><br />
-      <AccordionUsage />
-    </div>
+      <OrgAccordion organizations={organizations} />
+    </Box>
   );
 }
+
+SupportOrganizationsPage.propTypes = {
+  pageData: PropTypes.shape({
+    supportPageHeader: PropTypes.string.isRequired,
+    supportPageIntro: PropTypes.string.isRequired,
+  }).isRequired,
+};

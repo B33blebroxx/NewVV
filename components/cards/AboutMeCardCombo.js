@@ -6,6 +6,7 @@ import {
 import XIcon from '@mui/icons-material/X';
 import Box from '@mui/material/Box';
 
+// This component is a combination of an image and a material UI card to be used in the AboutMe page.
 export default function AboutMeCardCombo({ aboutMe }) {
   return (
     <Box id="about-me">

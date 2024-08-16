@@ -1,18 +1,7 @@
-import React, { useEffect, useState } from 'react';
 import { Card } from '@mui/material';
-import getMissionStatement from '../../api/missionStatementApi';
+import PropTypes from 'prop-types';
 
-export default function MissionStatement() {
-  const [missionStatement, setMissionStatement] = useState({});
-
-  const fetchMissionStatement = async () => {
-    getMissionStatement().then(setMissionStatement);
-  };
-
-  useEffect(() => {
-    fetchMissionStatement();
-  }, []);
-
+export default function MissionStatement({ missionStatement }) {
   return (
     <Card id="mission-statement-card">
       <h1>{missionStatement.welcomeMessage}</h1>
@@ -28,3 +17,19 @@ export default function MissionStatement() {
     </Card>
   );
 }
+
+MissionStatement.propTypes = {
+  missionStatement: PropTypes.shape({
+    missionStatementText: PropTypes.string,
+    missionStatementAcronym: PropTypes.string,
+    welcomeMessage: PropTypes.string,
+  }),
+};
+
+MissionStatement.defaultProps = {
+  missionStatement: {
+    missionStatementText: 'Mission Statement Text',
+    missionStatementAcronym: 'Mission Statement Acronym',
+    welcomeMessage: 'Welcome Message',
+  },
+};

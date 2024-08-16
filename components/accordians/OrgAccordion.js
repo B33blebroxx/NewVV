@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Box, Button } from '@mui/material';
 import Accordion from '@mui/material/Accordion';
 import AccordionActions from '@mui/material/AccordionActions';
@@ -6,20 +7,9 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Image } from 'react-bootstrap';
-import getOrgs from '../../api/supportOrgApi';
 
 // This component displays a list of organizations and their details/contact info in an accordion format.
-export default function OrgAccordion() {
-  const [organizations, setOrganizations] = useState([]);
-
-  useEffect(() => {
-    const fetchOrgs = async () => {
-      const orgs = await getOrgs();
-      setOrganizations(orgs);
-    };
-    fetchOrgs();
-  }, []);
-
+export default function OrgAccordion({ organizations }) {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       {organizations.map((org) => (
@@ -67,3 +57,29 @@ export default function OrgAccordion() {
     </Box>
   );
 }
+
+// Prop types for the OrgAccordion component.
+OrgAccordion.propTypes = {
+  organizations: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number,
+    supportOrgName: PropTypes.string,
+    supportOrgSummary: PropTypes.string,
+    supportOrgLogo: PropTypes.string,
+    supportOrgPhone: PropTypes.string,
+    supportOrgUrl: PropTypes.string,
+  })),
+};
+
+// Default props for the OrgAccordion component.
+OrgAccordion.defaultProps = {
+  organizations: [
+    {
+      id: 1,
+      supportOrgName: 'Organization Name',
+      supportOrgSummary: 'Organization Summary',
+      supportOrgLogo: 'Organization Logo',
+      supportOrgPhone: 'Organization Phone',
+      supportOrgUrl: 'Organization URL',
+    },
+  ],
+};
