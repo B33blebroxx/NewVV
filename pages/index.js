@@ -1,11 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box } from '@mui/material';
-import PropTypes from 'prop-types';
 import Image from 'next/image';
 import logo from '../utils/data/ValVenisLogo.png';
 import MissionStatement from '../components/cards/MissionStatementCard';
+import getMissionStatement from '../api/missionStatementApi';
 
-function Home({ missionStatement }) {
+function Home() {
+  const [missionStatement, setMissionStatement] = useState({});
+
+  const fetchMissionStatement = async () => {
+    getMissionStatement().then(setMissionStatement);
+  };
+
+  useEffect(() => {
+    fetchMissionStatement();
+  }, []);
+
   return (
     <Box className="container">
       <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -20,19 +30,3 @@ function Home({ missionStatement }) {
 }
 
 export default Home;
-
-Home.propTypes = {
-  missionStatement: PropTypes.shape({
-    missionStatementText: PropTypes.string.isRequired,
-    missionStatementAcronym: PropTypes.string.isRequired,
-    welcomeMessage: PropTypes.string.isRequired,
-  }),
-};
-
-Home.defaultProps = {
-  missionStatement: {
-    missionStatementText: 'Mission Statement Text',
-    missionStatementAcronym: 'Mission Statement Acronym',
-    welcomeMessage: 'Welcome Message',
-  },
-};

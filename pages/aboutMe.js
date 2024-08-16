@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, Divider } from '@mui/material';
 import AboutMeCardCombo from '../components/cards/AboutMeCardCombo';
-import getAboutMe from '../api/aboutMeApi';
+import { getAboutMe } from '../api/aboutMeApi';
 
 export default function AboutMe() {
   const [aboutMe, setAboutMe] = useState({});

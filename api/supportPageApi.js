@@ -1,7 +1,7 @@
 const databaseUrl = 'https://localhost:7067';
 
-const getAboutMe = async () => {
-  const response = await fetch(`${databaseUrl}/aboutme`, {
+const getSupportPageData = async () => {
+  const response = await fetch(`${databaseUrl}/supportpage`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -11,16 +11,16 @@ const getAboutMe = async () => {
   return data;
 };
 
-const editAboutMe = async (aboutMe) => {
-  const response = await fetch(`${databaseUrl}/aboutme`, {
+const editSupportPageData = async (supportPage) => {
+  const response = await fetch(`${databaseUrl}/supportpage`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(aboutMe),
+    body: JSON.stringify(supportPage),
   });
   const data = await response.json();
   return data;
 };
 
-export { getAboutMe, editAboutMe };
+export { getSupportPageData, editSupportPageData };
