@@ -11,4 +11,16 @@ const getQuotes = async () => {
   return data;
 };
 
-export default getQuotes;
+const addQuote = async (quote) => {
+  const response = await fetch(`${databaseUrl}/quotes`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(quote),
+  });
+  const data = await response.json();
+  return data;
+};
+
+export { getQuotes, addQuote };
