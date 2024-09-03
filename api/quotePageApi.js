@@ -1,7 +1,7 @@
 const databaseUrl = 'https://localhost:7067';
 
-const getQuotes = async () => {
-  const response = await fetch(`${databaseUrl}/quotes`, {
+const getQuotePageInfo = async () => {
+  const response = await fetch(`${databaseUrl}/quotePage`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -11,16 +11,16 @@ const getQuotes = async () => {
   return data;
 };
 
-const addQuote = async (quote) => {
-  const response = await fetch(`${databaseUrl}/quotes`, {
-    method: 'POST',
+const editQuotePageInfo = async (quotePage) => {
+  const response = await fetch(`${databaseUrl}/quotePage`, {
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(quote),
+    body: JSON.stringify(quotePage),
   });
   const data = await response.json();
   return data;
 };
 
-export { getQuotes, addQuote };
+export { getQuotePageInfo, editQuotePageInfo };
