@@ -30,10 +30,15 @@ const registerUser = (userInfo) => new Promise((resolve, reject) => {
     .catch(reject);
 });
 
-const signIn = () => {
-  const provider = new firebase.auth.GoogleAuthProvider();
-  firebase.auth().signInWithPopup(provider);
-};
+const signIn = (email, password) => firebase.auth().signInWithEmailAndPassword(email, password) // Use Firebase method to sign in
+  .then((userCredential) => {
+    console.log('User signed in:', userCredential.user);
+    return userCredential.user;
+  })
+  .catch((error) => {
+    console.error('Error during sign-in:', error.message);
+    throw error; // Propagate the error to be caught in the calling function
+  });
 
 const signOut = () => {
   firebase.auth().signOut();

@@ -26,7 +26,7 @@ const ViewDirectorBasedOnUserAuthStatus = ({ component: Component, pageProps }) 
   };
 
   if (redirectToAdmin) {
-    return <Signin onSuccess={() => router.push('/admin')} />;
+    return <Signin onSuccess={() => router.push('/admin/dashboard')} />;
   }
 
   return (
