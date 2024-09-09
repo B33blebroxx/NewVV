@@ -1,78 +1,82 @@
-// Context API Docs: https://beta.reactjs.org/learn/passing-data-deeply-with-context
-
+// authContext.js
 import React, {
-  createContext, //
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
+  createContext, useContext, useEffect, useMemo, useState,
 } from 'react';
-import { checkUser } from '../auth';
-import { firebase } from '../client';
+import {
+  checkUser, signIn, signOut, registerUser,
+} from '../auth';
 
 const AuthContext = createContext();
-
-AuthContext.displayName = 'AuthContext'; // Context object accepts a displayName string property. React DevTools uses this string to determine what to display for the context. https://reactjs.org/docs/context.html#contextdisplayname
+AuthContext.displayName = 'AuthContext';
 
 const AuthProvider = (props) => {
   const [user, setUser] = useState(null);
-  const [oAuthUser, setOAuthUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // there are 3 states for the user:
-  // null = application initial state, not yet loaded
-  // false = user is not logged in, but the app has loaded
-  // an object/value = user is logged in
+  const handleSignIn = async (username, password) => {
+    try {
+      const userData = await signIn(username, password);
+      setUser(userData);
+    } catch (error) {
+      console.error('Sign-in failed:', error.message);
+      setUser(null);
+    }
+  };
 
-  const updateUser = useMemo(
-    () => (uid) => checkUser(uid).then((gamerInfo) => {
-      setUser({ fbUser: oAuthUser, ...gamerInfo });
-    }),
-    [oAuthUser],
-  );
+  const handleSignOut = () => {
+    signOut();
+    setUser(null);
+  };
+
+  const handleRegister = async (userInfo) => {
+    try {
+      await registerUser(userInfo);
+    } catch (error) {
+      console.error('Registration failed:', error.message);
+    }
+  };
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((fbUser) => {
-      if (fbUser) {
-        setOAuthUser(fbUser);
-        checkUser(fbUser.uid).then((gamerInfo) => {
-          let userObj = {};
-          if ('null' in gamerInfo) {
-            userObj = gamerInfo;
-          } else {
-            userObj = { fbUser, uid: fbUser.uid, ...gamerInfo };
-          }
-          setUser(userObj);
-        });
-      } else {
-        setOAuthUser(false);
-        setUser(false);
+    const verifyUser = async () => {
+      try {
+        const result = await checkUser();
+
+        if (result && result.isLoggedIn) {
+          setUser(result.user);
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        console.error('Error verifying user:', error.message);
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-    }); // creates a single global listener for auth state changed
+    };
+
+    verifyUser();
   }, []);
 
   const value = useMemo(
-    // https://reactjs.org/docs/hooks-reference.html#usememo
     () => ({
       user,
-      updateUser,
-      userLoading: user === null || oAuthUser === null,
-      // as long as user === null, will be true
-      // As soon as the user value !== null, value will be false
+      loading,
+      signIn: handleSignIn,
+      signOut: handleSignOut,
+      register: handleRegister,
     }),
-    [user, oAuthUser, updateUser],
+    [user, loading],
   );
 
   return <AuthContext.Provider value={value} {...props} />;
 };
-const AuthConsumer = AuthContext.Consumer;
 
 const useAuth = () => {
   const context = useContext(AuthContext);
-
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
 
-export { AuthProvider, useAuth, AuthConsumer };
+export { AuthProvider, useAuth };

@@ -13,16 +13,28 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AdminPanelSettingsSharpIcon from '@mui/icons-material/AdminPanelSettingsSharp';
+import LogoutIcon from '@mui/icons-material/Logout';
 import PropTypes from 'prop-types';
 import Image from 'next/image';
 import logo from '../../utils/data/ValVenisLogo.png';
+import { useAuth } from '../../utils/context/authContext'; // Import useAuth hook to access user state
 
-// This component is a collapsible navigation bar that appears on the left side of the screen when the user clicks the menu icon. It includes internal and external links to various pages on the site, as well as a button that opens the admin panel.
 export default function NavBar({ onAdminClick }) {
+  const { user, signOut } = useAuth(); // Use signOut function from useAuth
   const [open, setOpen] = React.useState(false);
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
+  // Update isLoggedIn state whenever user state changes
+  React.useEffect(() => {
+    setIsLoggedIn(!!user); // Set isLoggedIn to true if user is not null
+  }, [user]);
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
+  };
+
+  const handleLogout = () => {
+    signOut(); // Call signOut function from context
   };
 
   const NavList = (
@@ -61,20 +73,46 @@ export default function NavBar({ onAdminClick }) {
             </ListItem>
           </Link>
         ))}
+        {isLoggedIn && (
+        <Link key="admin-dashboard" href="/admin/dashboard" passHref>
+          <ListItem disablePadding>
+            <ListItemButton component="a">
+              <ListItemText primary="Admin Dashboard" sx={{ textAlign: 'center' }} />
+            </ListItemButton>
+          </ListItem>
+        </Link>
+        )}
       </List>
       <Divider />
-      <Box sx={{
-        display: 'flex', flexDirection: 'column', alignItems: 'center', my: 3,
-      }}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          my: 3,
+        }}
       >
         <Tooltip title="Admin">
           <Button variant="outlined" color="primary" onClick={onAdminClick}>
             <AdminPanelSettingsSharpIcon />
           </Button>
         </Tooltip>
+        {isLoggedIn && ( // Conditionally render the logout button if the user is logged in
+          <Tooltip title="Logout">
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={handleLogout}
+              sx={{ mt: 2 }}
+            >
+              <LogoutIcon />
+            </Button>
+          </Tooltip>
+        )}
       </Box>
     </Box>
   );
+
   return (
     <div>
       <Button onClick={toggleDrawer(true)}>

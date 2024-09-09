@@ -41,7 +41,11 @@ export default function SupportOrganizationsPage() {
 
 SupportOrganizationsPage.propTypes = {
   pageData: PropTypes.shape({
-    supportPageHeader: PropTypes.string.isRequired,
-    supportPageIntro: PropTypes.string.isRequired,
-  }).isRequired,
+    supportPageHeader: PropTypes.string,
+    supportPageIntro: PropTypes.string,
+  }),
+};
+
+SupportOrganizationsPage.defaultProps = {
+  pageData: {},
 };
