@@ -1,19 +1,13 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/database';
+import axios from 'axios';
 
-const firebaseCredentials = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-};
+const apiBaseURL = 'https://localhost:7067'; // Update this to your backend's base URL if necessary
 
-const clientCredentials = {
-  ...firebaseCredentials,
-  databaseURL: process.env.NEXT_PUBLIC_DATABASE_URL,
-};
+const client = axios.create({
+  baseURL: apiBaseURL,
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
+});
 
-if (!firebase.apps.length) {
-  firebase?.initializeApp(firebaseCredentials);
-}
-
-export { firebase, clientCredentials };
+export default client;

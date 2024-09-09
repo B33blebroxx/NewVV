@@ -9,13 +9,13 @@ import TextField from '@mui/material/TextField';
 import { signIn } from '../../utils/auth';
 
 const SignInDialog = ({ open, onClose, onSuccess }) => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleSignIn = async () => {
     try {
-      await signIn(email, password); // Call the signIn function with email and password
+      await signIn(username, password); // Call the signIn function with email and password
       console.log('User signed in successfully');
       if (onSuccess) onSuccess(); // Close the dialog on successful sign-in
     } catch (err) {
@@ -31,11 +31,11 @@ const SignInDialog = ({ open, onClose, onSuccess }) => {
         <TextField
           autoFocus
           margin="dense"
-          label="Email"
-          type="email"
+          label="Username"
+          type="username"
           fullWidth
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           required
         />
         <TextField

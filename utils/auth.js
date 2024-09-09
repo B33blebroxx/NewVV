@@ -1,52 +1,52 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import { clientCredentials } from './client';
+// auth.js
+import Router from 'next/router';
+import client from './client';
 
-const checkUser = (uid) => new Promise((resolve, reject) => {
-  fetch(`${clientCredentials.databaseURL}/checkuser`, {
-    method: 'POST',
-    body: JSON.stringify({
-      uid,
-    }),
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-  })
-    .then((resp) => resolve(resp.json()))
-    .catch(reject);
-});
+const registerUser = async (userInfo) => {
+  try {
+    const response = await client.post('/auth/register', userInfo);
+    return response.data;
+  } catch (error) {
+    console.error('Error during registration:', error.message);
+    throw error;
+  }
+};
 
-const registerUser = (userInfo) => new Promise((resolve, reject) => {
-  fetch(`${clientCredentials.databaseURL}/register`, {
-    method: 'POST',
-    body: JSON.stringify(userInfo),
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-  })
-    .then((resp) => resolve(resp.json()))
-    .catch(reject);
-});
+const checkUser = async () => {
+  try {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      return { isLoggedIn: false };
+    }
 
-const signIn = (email, password) => firebase.auth().signInWithEmailAndPassword(email, password) // Use Firebase method to sign in
-  .then((userCredential) => {
-    console.log('User signed in:', userCredential.user);
-    return userCredential.user;
-  })
-  .catch((error) => {
+    const response = await client.get('/auth/check', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error checking login status:', error.message);
+    return { isLoggedIn: false };
+  }
+};
+
+const signIn = async (username, password) => {
+  try {
+    const response = await client.post('/auth/login', { username, password });
+    const { token, user } = response.data;
+    localStorage.setItem('authToken', token); // Store the token in local storage
+    return user;
+  } catch (error) {
     console.error('Error during sign-in:', error.message);
-    throw error; // Propagate the error to be caught in the calling function
-  });
+    throw error;
+  }
+};
 
 const signOut = () => {
-  firebase.auth().signOut();
+  localStorage.removeItem('authToken'); // Remove the token from local storage
+  Router.push('/');
 };
 
 export {
-  signIn, //
-  signOut,
-  checkUser,
-  registerUser,
+  signIn, signOut, checkUser, registerUser,
 };

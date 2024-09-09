@@ -5,7 +5,6 @@ import SignInDialog from './dialogs/SignInDialog';
 
 function Signin({ onSuccess }) {
   const [dialogOpen, setDialogOpen] = useState(false);
-
   const handleOpenDialog = () => setDialogOpen(true);
   const handleCloseDialog = () => setDialogOpen(false);
 
