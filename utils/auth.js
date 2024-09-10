@@ -23,6 +23,8 @@ const checkUser = async () => {
       headers: { Authorization: `Bearer ${token}` },
     });
 
+    console.log('checkUser response:', response.data); // Log the response data to verify
+
     return response.data;
   } catch (error) {
     console.error('Error checking login status:', error.message);

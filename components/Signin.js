@@ -27,9 +27,18 @@ function Signin({ onSuccess }) {
         paddingBlock: '0 5rem',
       }}
     >
-      <h1>Hi there!</h1>
-      <p>Click the button below to login!</p>
-      <Button type="button" size="lg" className="copy-btn" onClick={handleOpenDialog}>
+      <h1>Welcome</h1>
+      <p>Click the button below to login</p>
+      <Button
+        style={{
+          maxWidth: '10%',
+          alignSelf: 'center',
+        }}
+        type="button"
+        size="lg"
+        className="copy-btn"
+        onClick={handleOpenDialog}
+      >
         Sign In
       </Button>
       <SignInDialog open={dialogOpen} onClose={handleCloseDialog} onSuccess={handleSignInSuccess} />

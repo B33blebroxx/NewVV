@@ -1,90 +1,115 @@
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import {
   Alert,
-  Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
 } from '@mui/material';
-import { useState } from 'react';
-import { addQuote } from '../../api/quoteApi';
+import { addQuote, updateQuote } from '../../api/quoteApi';
 
-export default function AddQuoteDialog() {
-  const [open, setOpen] = useState(false);
+export default function AddQuoteDialog({
+  token, existingQuote, onCloseDialog, open, userId,
+}) {
   const [quote, setQuote] = useState('');
   const [author, setAuthor] = useState('');
-  const [userId, setUserId] = useState('');
   const [error, setError] = useState('');
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  useEffect(() => {
+    if (existingQuote) {
+      setQuote(existingQuote.quoteText);
+      setAuthor(existingQuote.quoteAuthor);
+    } else {
+      setQuote('');
+      setAuthor('');
+    }
+  }, [existingQuote]);
 
   const handleClose = () => {
-    setOpen(false);
+    if (onCloseDialog) onCloseDialog();
   };
 
-  const handleAddQuote = async () => {
+  const handleSaveQuote = async () => {
     if (!quote || !author || !userId) {
       setError('Quote, author, and user ID are required');
       return;
     }
 
-    const newQuote = {
-      QuoteText: quote,
-      QuoteAuthor: author,
-      UserId: userId,
-    };
-    await addQuote(newQuote);
-    setQuote('');
-    setAuthor('');
-    setUserId('');
-    setOpen(false);
+    try {
+      const quoteData = {
+        quoteText: quote,
+        quoteAuthor: author,
+        userId,
+      };
+
+      if (existingQuote) {
+        await updateQuote(existingQuote.id, quoteData, token);
+      } else {
+        await addQuote(quoteData, token);
+      }
+
+      setQuote('');
+      setAuthor('');
+      handleClose();
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
-    <div>
-      <Button variant="contained" color="primary" onClick={handleClickOpen}>
-        Add Quote
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add Quote</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="quote"
-            label="Quote"
-            type="text"
-            fullWidth
-            value={quote}
-            onChange={(e) => setQuote(e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            id="author"
-            label="Author"
-            type="text"
-            fullWidth
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            id="userId"
-            label="User ID"
-            type="text"
-            fullWidth
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-          />
-          {error && <Alert severity="error">{error}</Alert>}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleAddQuote} color="primary">
-            Add
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+    <Dialog open={open} onClose={handleClose}>
+      <DialogTitle>{existingQuote ? 'Edit Quote' : 'Add Quote'}</DialogTitle>
+      <DialogContent>
+        <TextField
+          autoFocus
+          margin="dense"
+          id="quote"
+          label="Quote"
+          type="text"
+          fullWidth
+          value={quote}
+          onChange={(e) => setQuote(e.target.value)}
+        />
+        <TextField
+          margin="dense"
+          id="author"
+          label="Author"
+          type="text"
+          fullWidth
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+        />
+        {error && <Alert severity="error">{error}</Alert>}
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="primary">
+          Cancel
+        </Button>
+        <Button onClick={handleSaveQuote} color="primary">
+          {existingQuote ? 'Update' : 'Add'}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
+
+AddQuoteDialog.propTypes = {
+  token: PropTypes.string.isRequired,
+  existingQuote: PropTypes.shape({
+    id: PropTypes.string,
+    quoteText: PropTypes.string,
+    quoteAuthor: PropTypes.string,
+  }),
+  onCloseDialog: PropTypes.func,
+  open: PropTypes.bool.isRequired,
+  userId: PropTypes.string,
+};
+
+AddQuoteDialog.defaultProps = {
+  existingQuote: null,
+  onCloseDialog: null,
+  userId: null,
+};
