@@ -1,5 +1,5 @@
-// auth.js
 import Router from 'next/router';
+import { jwtDecode } from 'jwt-decode';
 import client from './client';
 
 const registerUser = async (userInfo) => {
@@ -22,8 +22,6 @@ const checkUser = async () => {
     const response = await client.get('/auth/check', {
       headers: { Authorization: `Bearer ${token}` },
     });
-
-    console.log('checkUser response:', response.data); // Log the response data to verify
 
     return response.data;
   } catch (error) {
@@ -49,6 +47,30 @@ const signOut = () => {
   Router.push('/');
 };
 
+const checkTokenAndRedirect = () => {
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    alert('You are not logged in.');
+    window.location.href = '/';
+    return false;
+  }
+
+  try {
+    const decodedToken = jwtDecode(token);
+    const currentTime = Date.now() / 1000;
+    if (decodedToken.exp < currentTime) {
+      alert('Session expired. Please log in again.');
+      window.location.href = '/';
+      return false;
+    }
+    return true;
+  } catch (error) {
+    alert('Invalid token. Please log in again.');
+    window.location.href = '/';
+    return false;
+  }
+};
+
 export {
-  signIn, signOut, checkUser, registerUser,
+  signIn, signOut, checkUser, registerUser, checkTokenAndRedirect,
 };
