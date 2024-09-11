@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Button, Divider } from '@mui/material';
 import AddQuoteDialog from '../../components/dialogs/AddQuoteDialog';
 import QuoteListDialog from '../../components/dialogs/QuoteListDialog';
-import { checkUser } from '../../utils/auth';
+import { checkTokenAndRedirect, checkUser } from '../../utils/auth';
 
 export default function Dashboard() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -22,6 +22,7 @@ export default function Dashboard() {
   }, []);
 
   const handleOpenDialog = () => {
+    checkTokenAndRedirect(token);
     setIsDialogOpen(true);
   };
 
@@ -31,6 +32,7 @@ export default function Dashboard() {
   };
 
   const handleEditQuote = (quote) => {
+    checkTokenAndRedirect(token);
     setSelectedQuote(quote);
     setIsDialogOpen(true);
   };
