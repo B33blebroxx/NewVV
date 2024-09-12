@@ -1,26 +1,32 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+  TextField,
+  Alert,
+} from '@mui/material';
 import { signIn } from '../../utils/auth';
 
 const SignInDialog = ({ open, onClose, onSuccess }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [credentials, setCredentials] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCredentials((prevCredentials) => ({ ...prevCredentials, [name]: value }));
+  };
 
   const handleSignIn = async () => {
     try {
-      await signIn(username, password); // Call the signIn function with email and password
-      console.log('User signed in successfully');
-      if (onSuccess) onSuccess(); // Close the dialog on successful sign-in
+      await signIn(credentials.username, credentials.password);
+      if (onSuccess) onSuccess();
     } catch (err) {
       console.error('Error during sign-in:', err.message);
-      setError(err.message); // Display the error message
+      setError(err.message);
     }
   };
 
@@ -31,27 +37,29 @@ const SignInDialog = ({ open, onClose, onSuccess }) => {
         <TextField
           autoFocus
           margin="dense"
+          name="username"
           label="Username"
-          type="username"
+          type="text"
           fullWidth
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={credentials.username}
+          onChange={handleInputChange}
           required
         />
         <TextField
           margin="dense"
+          name="password"
           label="Password"
           type="password"
           fullWidth
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={credentials.password}
+          onChange={handleInputChange}
           required
         />
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <Alert severity="error">{error}</Alert>}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={() => handleSignIn()} variant="contained" color="primary">
+        <Button onClick={handleSignIn} variant="contained" color="primary">
           Sign In
         </Button>
       </DialogActions>

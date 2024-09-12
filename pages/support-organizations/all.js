@@ -1,40 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Divider } from '@mui/material';
-import getOrgs from '../../api/supportOrgApi';
 import OrgAccordion from '../../components/accordians/OrgAccordion';
 import { getSupportPageData } from '../../api/supportPageApi';
+import { getOrgs } from '../../api/supportOrgApi';
 
 export default function SupportOrganizationsPage() {
-  const [pageData, setPageData] = useState({});
-  const [organizations, setOrganizations] = useState([]);
+  const [state, setState] = useState({
+    pageData: {},
+    organizations: [],
+    loading: true,
+    error: null,
+  });
 
-  const fetchOrgs = async () => {
-    getOrgs().then(setOrganizations);
-  };
-
-  const fetchPageData = async () => {
-    getSupportPageData().then(setPageData);
-  };
-
-  useEffect(() => {
-    fetchOrgs();
+  const fetchData = useCallback(async () => {
+    try {
+      const [orgs, data] = await Promise.all([getOrgs(), getSupportPageData()]);
+      setState({
+        pageData: data, organizations: orgs, loading: false, error: null,
+      });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setState((prevState) => ({ ...prevState, loading: false, error: 'Failed to load data' }));
+    }
   }, []);
 
   useEffect(() => {
-    fetchPageData();
-  }, []);
+    fetchData();
+  }, [fetchData]);
+
+  if (state.loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (state.error) {
+    return <div>Error: {state.error}</div>;
+  }
 
   return (
     <Box>
       <br /><br />
-      <h1 style={{ textAlign: 'center' }}>{pageData.supportPageHeader}</h1>
+      <h1 style={{ textAlign: 'center' }}>{state.pageData.supportPageHeader}</h1>
       <br />
-      <h4 style={{ textAlign: 'center' }}>{pageData.supportPageIntro}</h4>
+      <h4 style={{ textAlign: 'center' }}>{state.pageData.supportPageIntro}</h4>
       <br />
       <Divider sx={{ backgroundColor: 'black' }} />
       <br /><br />
-      <OrgAccordion organizations={organizations} />
+      <OrgAccordion organizations={state.organizations} />
     </Box>
   );
 }

@@ -1,41 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Box, Button, Divider } from '@mui/material';
-import AddQuoteDialog from '../../components/dialogs/AddQuoteDialog';
+import QuoteDialog from '../../components/dialogs/QuoteDialog';
 import QuoteListDialog from '../../components/dialogs/QuoteListDialog';
-import { checkTokenAndRedirect, checkUser } from '../../utils/auth';
+import { checkTokenAndRedirect } from '../../utils/auth';
+import { useAuth } from '../../utils/context/authContext'; // Assuming you have an AuthContext
 
 export default function Dashboard() {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedQuote, setSelectedQuote] = useState(null);
-  const [userId, setUserId] = useState(null); // Add state for userId
+  const [dialogState, setDialogState] = useState({
+    isDialogOpen: false,
+    selectedQuote: null,
+  });
+  const { user } = useAuth(); // Use the AuthContext to get the user
   const token = localStorage.getItem('authToken');
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const result = await checkUser();
-      if (result.isLoggedIn) {
-        setUserId(result.user.userId); // Set userId from checkUser result
-      }
-    };
+  const handleOpenDialog = useCallback(() => {
+    if (checkTokenAndRedirect(token)) {
+      setDialogState((prev) => ({ ...prev, isDialogOpen: true }));
+    }
+  }, [token]);
 
-    fetchUser();
+  const handleCloseDialog = useCallback(() => {
+    setDialogState({ isDialogOpen: false, selectedQuote: null });
   }, []);
 
-  const handleOpenDialog = () => {
-    checkTokenAndRedirect(token);
-    setIsDialogOpen(true);
-  };
-
-  const handleCloseDialog = () => {
-    setIsDialogOpen(false);
-    setSelectedQuote(null);
-  };
-
-  const handleEditQuote = (quote) => {
-    checkTokenAndRedirect(token);
-    setSelectedQuote(quote);
-    setIsDialogOpen(true);
-  };
+  const handleEditQuote = useCallback((quote) => {
+    if (checkTokenAndRedirect(token)) {
+      setDialogState({ isDialogOpen: true, selectedQuote: quote });
+    }
+  }, [token]);
 
   return (
     <Box id="dashboard-container">
@@ -52,12 +44,12 @@ export default function Dashboard() {
         </Button>
       </Box>
       <Box className="dashboard">
-        <AddQuoteDialog
+        <QuoteDialog
           token={token}
-          existingQuote={selectedQuote}
-          open={isDialogOpen}
+          existingQuote={dialogState.selectedQuote}
+          open={dialogState.isDialogOpen}
           onCloseDialog={handleCloseDialog}
-          userId={userId}
+          userId={user?.userId}
         />
         <QuoteListDialog token={token} onEditQuote={handleEditQuote} />
       </Box>

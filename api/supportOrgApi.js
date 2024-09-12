@@ -11,4 +11,41 @@ const getOrgs = async () => {
   return data;
 };
 
-export default getOrgs;
+const createOrg = async (org) => {
+  const response = await fetch(`${databaseUrl}/supportorgs`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(org),
+  });
+  const data = await response.json();
+  return data;
+};
+
+const updateOrg = async (org) => {
+  const response = await fetch(`${databaseUrl}/supportorgs/${org.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(org),
+  });
+  const data = await response.json();
+  return data;
+};
+
+const deleteOrg = async (orgId) => {
+  const response = await fetch(`${databaseUrl}/supportorgs/${orgId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  const data = await response.json();
+  return data;
+};
+
+export {
+  getOrgs, createOrg, updateOrg, deleteOrg,
+};
