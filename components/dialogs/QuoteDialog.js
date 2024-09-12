@@ -104,7 +104,7 @@ export default function QuoteDialog({
 QuoteDialog.propTypes = {
   token: PropTypes.string,
   existingQuote: PropTypes.shape({
-    id: PropTypes.string,
+    id: PropTypes.number,
     quoteText: PropTypes.string,
     quoteAuthor: PropTypes.string,
   }),
