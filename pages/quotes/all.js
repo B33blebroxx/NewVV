@@ -1,40 +1,55 @@
-import { Box, Divider } from '@mui/material';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import { Box, Divider } from '@mui/material';
 import QuoteCard from '../../components/cards/QuoteCards';
 import { getQuotePageInfo } from '../../api/quotePageApi';
 import { getQuotes } from '../../api/quoteApi';
 
 export default function QuotePage() {
-  const [quotes, setQuotes] = useState([]);
-  const [quotePage, setQuotePage] = useState({});
-
-  const fetchQuotePageInfo = async () => {
-    getQuotePageInfo().then(setQuotePage);
-  };
-
-  const fetchQuotes = async () => {
-    getQuotes().then(setQuotes);
-  };
-
-  useState(() => {
-    fetchQuotePageInfo();
-    fetchQuotes();
+  const [state, setState] = useState({
+    quotes: [],
+    quotePage: {},
+    loading: true,
+    error: null,
   });
+
+  const fetchData = useCallback(async () => {
+    try {
+      const [quotes, quotePageInfo] = await Promise.all([getQuotes(), getQuotePageInfo()]);
+      setState({
+        quotes, quotePage: quotePageInfo, loading: false, error: null,
+      });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setState((prevState) => ({ ...prevState, loading: false, error: 'Failed to load data' }));
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  if (state.loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (state.error) {
+    return <div>Error: {state.error}</div>;
+  }
 
   return (
     <Box>
       <Box>
         <br /><br />
-        <h1 style={{ textAlign: 'center' }}>{quotePage.quotePageHeader}</h1>
+        <h1 style={{ textAlign: 'center' }}>{state.quotePage.quotePageHeader}</h1>
         <br />
-        <h4 style={{ textAlign: 'center' }}>{quotePage.quotePageIntro}</h4>
+        <h4 style={{ textAlign: 'center' }}>{state.quotePage.quotePageIntro}</h4>
         <br />
         <Divider sx={{ backgroundColor: 'black' }} />
         <br /><br />
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        {quotes.map((quote) => (
+        {state.quotes.map((quote) => (
           <QuoteCard key={quote.id} quote={quote} />
         ))}
       </Box>

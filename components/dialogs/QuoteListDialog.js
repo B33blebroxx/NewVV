@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Dialog, DialogActions, DialogContent, DialogTitle, Button, List, ListItem, ListItemText, IconButton,
 } from '@mui/material';
@@ -6,28 +6,30 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PropTypes from 'prop-types';
 import { deleteQuote, getQuotes } from '../../api/quoteApi';
-import AddQuoteDialog from './AddQuoteDialog';
+import QuoteDialog from './QuoteDialog';
 import { checkUser } from '../../utils/auth';
 
-export default function QuoteListDialog({ token, onEditQuote }) {
-  const [isListDialogOpen, setIsListDialogOpen] = useState(false);
+export default function QuoteListDialog({ token }) {
+  const [dialogState, setDialogState] = useState({
+    isListDialogOpen: false,
+    isAddQuoteDialogOpen: false,
+  });
   const [userId, setUserId] = useState(null);
   const [quotes, setQuotes] = useState([]);
   const [selectedQuote, setSelectedQuote] = useState(null);
-  const [isAddQuoteDialogOpen, setIsAddQuoteDialogOpen] = useState(false);
+
+  const fetchQuotes = useCallback(async () => {
+    try {
+      const data = await getQuotes();
+      setQuotes(data);
+    } catch (err) {
+      console.error('Error fetching quotes:', err.message);
+    }
+  }, []);
 
   useEffect(() => {
-    const fetchQuotesData = async () => {
-      try {
-        const data = await getQuotes(token);
-        setQuotes(data);
-      } catch (err) {
-        console.error('Error fetching quotes:', err.message);
-      }
-    };
-
-    fetchQuotesData();
-  }, [token]);
+    fetchQuotes();
+  }, [fetchQuotes, quotes]);
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -40,57 +42,39 @@ export default function QuoteListDialog({ token, onEditQuote }) {
     fetchUserId();
   }, []);
 
-  const handleOpenListDialog = () => {
-    setIsListDialogOpen(true);
-  };
-
-  const handleCloseListDialog = () => {
-    setIsListDialogOpen(false);
-    setSelectedQuote(null);
-  };
-
-  const handleOpenAddQuoteDialog = () => {
-    setIsAddQuoteDialogOpen(true);
-  };
-
-  const handleCloseAddQuoteDialog = () => {
-    setIsAddQuoteDialogOpen(false);
-    setSelectedQuote(null);
+  const toggleDialog = (dialogType, isOpen) => {
+    setDialogState((prevState) => ({
+      ...prevState,
+      [dialogType]: isOpen,
+    }));
   };
 
   const handleEdit = (quote) => {
     setSelectedQuote(quote);
-    handleOpenAddQuoteDialog();
-    if (onEditQuote) {
-      onEditQuote(quote);
-    }
+    toggleDialog('isAddQuoteDialogOpen', true);
   };
 
   const handleDelete = async (quoteId) => {
     try {
       await deleteQuote(quoteId, token);
-      setQuotes((prevQuotes) => prevQuotes.filter((quote) => quote.id !== quoteId));
+      await fetchQuotes();
     } catch (err) {
       console.error('Error deleting quote:', err.message);
     }
   };
 
-  const handleSaveQuote = (updatedQuote) => {
-    if (selectedQuote) {
-      setQuotes((prevQuotes) => prevQuotes.map((quote) => (quote.id === updatedQuote.id ? updatedQuote : quote)));
-    } else {
-      setQuotes((prevQuotes) => [...prevQuotes, updatedQuote]);
-    }
-    handleCloseAddQuoteDialog();
-    handleCloseListDialog(); // Make sure to only close the list dialog if it's open
+  const handleSaveQuote = async () => {
+    await fetchQuotes();
+    toggleDialog('isAddQuoteDialogOpen', false);
+    setSelectedQuote(null);
   };
 
   return (
     <div>
-      <Button variant="contained" color="primary" onClick={handleOpenListDialog}>
+      <Button variant="contained" color="primary" onClick={() => toggleDialog('isListDialogOpen', true)}>
         Open Quotes List
       </Button>
-      <Dialog open={isListDialogOpen} onClose={handleCloseListDialog}>
+      <Dialog open={dialogState.isListDialogOpen} onClose={() => toggleDialog('isListDialogOpen', false)}>
         <DialogTitle>Quotes List</DialogTitle>
         <DialogContent>
           <List>
@@ -108,18 +92,16 @@ export default function QuoteListDialog({ token, onEditQuote }) {
           </List>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseListDialog}>Close</Button>
+          <Button onClick={() => toggleDialog('isListDialogOpen', false)}>Close</Button>
         </DialogActions>
       </Dialog>
-      <AddQuoteDialog
+      <QuoteDialog
         token={token}
         existingQuote={selectedQuote}
-        open={isAddQuoteDialogOpen}
-        onCloseDialog={handleCloseAddQuoteDialog}
+        open={dialogState.isAddQuoteDialogOpen}
+        onCloseDialog={() => toggleDialog('isAddQuoteDialogOpen', false)}
         userId={userId}
-        onSaveQuote={(updatedQuote) => {
-          handleSaveQuote(updatedQuote);
-        }}
+        onSaveQuote={handleSaveQuote}
       />
     </div>
   );
@@ -127,5 +109,4 @@ export default function QuoteListDialog({ token, onEditQuote }) {
 
 QuoteListDialog.propTypes = {
   token: PropTypes.string.isRequired,
-  onEditQuote: PropTypes.func.isRequired,
 };

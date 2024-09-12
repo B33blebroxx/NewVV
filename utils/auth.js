@@ -2,6 +2,8 @@ import Router from 'next/router';
 import { jwtDecode } from 'jwt-decode';
 import client from './client';
 
+const AUTH_TOKEN_KEY = 'authToken';
+
 const registerUser = async (userInfo) => {
   try {
     const response = await client.post('/auth/register', userInfo);
@@ -14,7 +16,7 @@ const registerUser = async (userInfo) => {
 
 const checkUser = async () => {
   try {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem(AUTH_TOKEN_KEY);
     if (!token) {
       return { isLoggedIn: false };
     }
@@ -34,7 +36,7 @@ const signIn = async (username, password) => {
   try {
     const response = await client.post('/auth/login', { username, password });
     const { token, user } = response.data;
-    localStorage.setItem('authToken', token); // Store the token in local storage
+    localStorage.setItem(AUTH_TOKEN_KEY, token);
     return user;
   } catch (error) {
     console.error('Error during sign-in:', error.message);
@@ -43,15 +45,15 @@ const signIn = async (username, password) => {
 };
 
 const signOut = () => {
-  localStorage.removeItem('authToken'); // Remove the token from local storage
+  localStorage.removeItem(AUTH_TOKEN_KEY);
   Router.push('/');
 };
 
 const checkTokenAndRedirect = () => {
-  const token = localStorage.getItem('authToken');
+  const token = localStorage.getItem(AUTH_TOKEN_KEY);
   if (!token) {
     alert('You are not logged in.');
-    window.location.href = '/';
+    Router.push('/');
     return false;
   }
 
@@ -60,13 +62,15 @@ const checkTokenAndRedirect = () => {
     const currentTime = Date.now() / 1000;
     if (decodedToken.exp < currentTime) {
       alert('Session expired. Please log in again.');
-      window.location.href = '/';
+      localStorage.removeItem(AUTH_TOKEN_KEY);
+      Router.push('/');
       return false;
     }
     return true;
   } catch (error) {
     alert('Invalid token. Please log in again.');
-    window.location.href = '/';
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+    Router.push('/');
     return false;
   }
 };

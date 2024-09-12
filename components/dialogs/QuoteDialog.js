@@ -11,48 +11,53 @@ import {
 } from '@mui/material';
 import { addQuote, updateQuote } from '../../api/quoteApi';
 
-export default function AddQuoteDialog({
-  token, existingQuote, onCloseDialog, open, userId,
+export default function QuoteDialog({
+  token, existingQuote, onCloseDialog, open, userId, onSaveQuote,
 }) {
-  const [quote, setQuote] = useState('');
-  const [author, setAuthor] = useState('');
+  const [quoteData, setQuoteData] = useState({ quoteText: '', quoteAuthor: '' });
   const [error, setError] = useState('');
 
   useEffect(() => {
     if (existingQuote) {
-      setQuote(existingQuote.quoteText);
-      setAuthor(existingQuote.quoteAuthor);
+      setQuoteData({
+        quoteText: existingQuote.quoteText,
+        quoteAuthor: existingQuote.quoteAuthor,
+      });
     } else {
-      setQuote('');
-      setAuthor('');
+      setQuoteData({ quoteText: '', quoteAuthor: '' });
     }
   }, [existingQuote]);
 
   const handleClose = () => {
+    setQuoteData({ quoteText: '', quoteAuthor: '' });
+    setError('');
     if (onCloseDialog) onCloseDialog();
   };
 
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setQuoteData((prevData) => ({ ...prevData, [id]: value }));
+  };
+
   const handleSaveQuote = async () => {
-    if (!quote || !author || !userId) {
+    const { quoteText, quoteAuthor } = quoteData;
+    if (!quoteText || !quoteAuthor || !userId) {
       setError('Quote, author, and user ID are required');
       return;
     }
 
     try {
-      const quoteData = {
-        quoteText: quote,
-        quoteAuthor: author,
-        userId,
-      };
+      const quotePayload = { ...quoteData, userId };
 
       if (existingQuote) {
-        await updateQuote(existingQuote.id, quoteData, token);
+        await updateQuote(existingQuote.id, quotePayload, token);
       } else {
-        await addQuote(quoteData, token);
+        await addQuote(quotePayload, token);
       }
 
-      setQuote('');
-      setAuthor('');
+      if (onSaveQuote) {
+        await onSaveQuote();
+      }
       handleClose();
     } catch (err) {
       setError(err.message);
@@ -66,21 +71,21 @@ export default function AddQuoteDialog({
         <TextField
           autoFocus
           margin="dense"
-          id="quote"
+          id="quoteText"
           label="Quote"
           type="text"
           fullWidth
-          value={quote}
-          onChange={(e) => setQuote(e.target.value)}
+          value={quoteData.quoteText}
+          onChange={handleInputChange}
         />
         <TextField
           margin="dense"
-          id="author"
+          id="quoteAuthor"
           label="Author"
           type="text"
           fullWidth
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
+          value={quoteData.quoteAuthor}
+          onChange={handleInputChange}
         />
         {error && <Alert severity="error">{error}</Alert>}
       </DialogContent>
@@ -96,20 +101,23 @@ export default function AddQuoteDialog({
   );
 }
 
-AddQuoteDialog.propTypes = {
-  token: PropTypes.string.isRequired,
+QuoteDialog.propTypes = {
+  token: PropTypes.string,
   existingQuote: PropTypes.shape({
     id: PropTypes.string,
     quoteText: PropTypes.string,
     quoteAuthor: PropTypes.string,
   }),
   onCloseDialog: PropTypes.func,
+  onSaveQuote: PropTypes.func,
   open: PropTypes.bool.isRequired,
   userId: PropTypes.string,
 };
 
-AddQuoteDialog.defaultProps = {
+QuoteDialog.defaultProps = {
   existingQuote: null,
   onCloseDialog: null,
+  onSaveQuote: null,
   userId: null,
+  token: null,
 };
