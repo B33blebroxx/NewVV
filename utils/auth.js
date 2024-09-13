@@ -75,6 +75,23 @@ const checkTokenAndRedirect = () => {
   }
 };
 
+const checkTokenOnInitialVisit = () => {
+  const token = localStorage.getItem(AUTH_TOKEN_KEY);
+  if (!token) return;
+
+  try {
+    const decodedToken = jwtDecode(token);
+    const currentTime = Date.now() / 1000;
+    if (decodedToken.exp < currentTime) {
+      // Token is expired, remove it and refresh the page
+      localStorage.removeItem(AUTH_TOKEN_KEY);
+    }
+  } catch (error) {
+    console.error('Invalid token:', error.message);
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+  }
+};
+
 export {
-  signIn, signOut, checkUser, registerUser, checkTokenAndRedirect,
+  signIn, signOut, checkUser, registerUser, checkTokenAndRedirect, checkTokenOnInitialVisit,
 };
