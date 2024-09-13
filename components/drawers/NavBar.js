@@ -18,7 +18,6 @@ import PropTypes from 'prop-types';
 import Image from 'next/image';
 import logo from '../../utils/data/ValVenisLogo.png';
 import { useAuth } from '../../utils/context/authContext'; // Import useAuth hook to access user state
-import { checkTokenAndRedirect } from '../../utils/auth';
 
 export default function NavBar({ onAdminClick }) {
   const { user, signOut } = useAuth(); // Use signOut function from useAuth
@@ -35,12 +34,11 @@ export default function NavBar({ onAdminClick }) {
   };
 
   const handleLogout = () => {
-    checkTokenAndRedirect(); // Check for token expiration before logging out
     signOut(); // Call signOut function from context
   };
 
   const handleAdminLinkClick = () => {
-    checkTokenAndRedirect(); // Check for token expiration before navigating to admin dashboard
+    onAdminClick(); // Trigger admin click handler
   };
 
   const NavList = (
@@ -80,13 +78,13 @@ export default function NavBar({ onAdminClick }) {
           </Link>
         ))}
         {isLoggedIn && (
-        <Link key="admin-dashboard" href="/admin/dashboard" passHref>
-          <ListItem disablePadding>
-            <ListItemButton component="a" onClick={handleAdminLinkClick}>
-              <ListItemText primary="Admin Dashboard" sx={{ textAlign: 'center' }} />
-            </ListItemButton>
-          </ListItem>
-        </Link>
+          <Link key="admin-dashboard" href="/admin/dashboard" passHref>
+            <ListItem disablePadding>
+              <ListItemButton component="a" onClick={handleAdminLinkClick}>
+                <ListItemText primary="Admin Dashboard" sx={{ textAlign: 'center' }} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
         )}
       </List>
       <Divider />
