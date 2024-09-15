@@ -11,4 +11,24 @@ const getMissionStatement = async () => {
   return data;
 };
 
-export default getMissionStatement;
+const editMissionStatement = async (missionStatement, token, userId) => {
+  const response = await fetch(`${databaseUrl}/missionstatement`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+      userId,
+    },
+    body: JSON.stringify(missionStatement),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Error ${response.status}: ${errorText}`);
+  }
+
+  const data = await response.json();
+  return data;
+};
+
+export { getMissionStatement, editMissionStatement };

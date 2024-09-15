@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Divider, Button } from '@mui/material';
+import { useAuth } from '../../utils/context/authContext';
+import { getAboutMe } from '../../api/aboutMeApi';
+import { getMissionStatement } from '../../api/missionStatementApi';
+import MissionStatementDialog from '../../components/dialogs/MissionStatementDialog';
 import QuoteListDialog from '../../components/dialogs/QuoteListDialog';
 import SupportOrgListDialog from '../../components/dialogs/SupportListDialog';
 import AboutMeDialog from '../../components/dialogs/AboutMeDialog';
-import { useAuth } from '../../utils/context/authContext';
-import { getAboutMe } from '../../api/aboutMeApi';
 
 export default function Dashboard() {
   const { user } = useAuth();
   const token = localStorage.getItem('authToken');
   const [openAboutMeDialog, setOpenAboutMeDialog] = useState(false);
+  const [openMissionStatementDialog, setOpenMissionStatementDialog] = useState(false); // For mission statement dialog
   const [aboutMeData, setAboutMeData] = useState(null);
+  const [missionData, setMissionData] = useState(null); // For mission statement data
 
   const handleOpenAboutMeDialog = () => {
     setOpenAboutMeDialog(true);
@@ -18,6 +22,14 @@ export default function Dashboard() {
 
   const handleCloseAboutMeDialog = () => {
     setOpenAboutMeDialog(false);
+  };
+
+  const handleOpenMissionStatementDialog = () => {
+    setOpenMissionStatementDialog(true);
+  };
+
+  const handleCloseMissionStatementDialog = () => {
+    setOpenMissionStatementDialog(false);
   };
 
   const fetchAboutMeData = async () => {
@@ -29,8 +41,18 @@ export default function Dashboard() {
     }
   };
 
+  const fetchMissionData = async () => {
+    try {
+      const data = await getMissionStatement();
+      setMissionData(data);
+    } catch (err) {
+      console.error('Failed to fetch mission statement data', err);
+    }
+  };
+
   useEffect(() => {
     fetchAboutMeData();
+    fetchMissionData(); // Fetch mission statement data
   }, []);
 
   return (
@@ -43,16 +65,22 @@ export default function Dashboard() {
         <br /><br />
       </Box>
       <Box className="dashboard">
-        <QuoteListDialog
+        <Button variant="contained" onClick={handleOpenMissionStatementDialog}>
+          Edit Mission Statement
+        </Button>
+        <MissionStatementDialog
           token={token}
-          userId={user?.userId}
+          open={openMissionStatementDialog}
+          onClose={handleCloseMissionStatementDialog}
+          missionData={missionData}
+          refreshMissionData={fetchMissionData}
         />
       </Box>
       <Box className="dashboard">
-        <SupportOrgListDialog
-          token={token}
-          userId={user?.userId}
-        />
+        <QuoteListDialog token={token} userId={user?.userId} />
+      </Box>
+      <Box className="dashboard">
+        <SupportOrgListDialog token={token} userId={user?.userId} />
       </Box>
       <Box className="dashboard">
         <Button variant="contained" onClick={handleOpenAboutMeDialog}>

@@ -2,8 +2,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Box } from '@mui/material';
 import Image from 'next/image';
 import logo from '../utils/data/ValVenisLogo.png';
+import { getMissionStatement } from '../api/missionStatementApi';
 import MissionStatement from '../components/cards/MissionStatementCard';
-import getMissionStatement from '../api/missionStatementApi';
 
 function Home() {
   const [missionStatement, setMissionStatement] = useState({});
