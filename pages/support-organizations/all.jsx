@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Divider } from '@mui/material';
-import OrgAccordion from '../../components/accordians/OrgAccordion';
 import { getSupportPageData } from '../../api/supportPageApi';
 import { getOrgs } from '../../api/supportOrgApi';
+import OrgAccordion from '../../components/accordions/OrgAccordion';
 
 export default function SupportOrganizationsPage() {
   const [state, setState] = useState({

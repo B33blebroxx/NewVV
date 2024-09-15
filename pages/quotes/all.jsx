@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Divider } from '@mui/material';
-import QuoteCard from '../../components/cards/QuoteCards';
 import { getQuotePageInfo } from '../../api/quotePageApi';
 import { getQuotes } from '../../api/quoteApi';
+import QuoteCard from '../../components/cards/QuoteCards';
 
 export default function QuotePage() {
   const [state, setState] = useState({

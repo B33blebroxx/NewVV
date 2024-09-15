@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Divider } from '@mui/material';
-import AboutMeCardCombo from '../components/cards/AboutMeCardCombo';
 import { getAboutMe } from '../api/aboutMeApi';
+import AboutMeCardCombo from '../components/cards/AboutMeCardCombo';
 
 export default function AboutMe() {
   const [state, setState] = useState({
