@@ -32,9 +32,9 @@ const checkUser = async () => {
   }
 };
 
-const signIn = async (username, password) => {
+const signIn = async (email, password) => {
   try {
-    const response = await client.post('/auth/login', { username, password });
+    const response = await client.post('/auth/login', { email, password });
     const { token, user } = response.data;
     localStorage.setItem(AUTH_TOKEN_KEY, token);
     return user;
