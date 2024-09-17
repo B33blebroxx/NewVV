@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {
+  useState, useEffect, useCallback, Suspense,
+} from 'react';
 import {
   Dialog, DialogActions, DialogContent, DialogTitle, Button, List, ListItem, ListItemText, IconButton,
 } from '@mui/material';
@@ -6,8 +8,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PropTypes from 'prop-types';
 import { deleteQuote, getQuotes } from '../../api/quoteApi';
-import QuoteDialog from './QuoteDialog';
 import { checkUser } from '../../utils/auth';
+
+// Lazy load the QuoteDialog component
+const QuoteDialog = React.lazy(() => import('./QuoteDialog'));
 
 export default function QuoteListDialog({ token }) {
   const [isListDialogOpen, setIsListDialogOpen] = useState(false);
@@ -105,14 +109,16 @@ export default function QuoteListDialog({ token }) {
           </Button>
         </DialogActions>
       </Dialog>
-      <QuoteDialog
-        token={token}
-        existingQuote={selectedQuote}
-        open={isAddQuoteDialogOpen}
-        onCloseDialog={handleCloseAddQuoteDialog}
-        userId={userId}
-        onSaveQuote={handleSaveQuote}
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <QuoteDialog
+          token={token}
+          existingQuote={selectedQuote}
+          open={isAddQuoteDialogOpen}
+          onCloseDialog={handleCloseAddQuoteDialog}
+          userId={userId}
+          onSaveQuote={handleSaveQuote}
+        />
+      </Suspense>
     </div>
   );
 }

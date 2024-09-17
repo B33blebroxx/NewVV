@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {
+  useState, useEffect, useCallback, Suspense,
+} from 'react';
 import {
   Dialog, DialogActions, DialogContent, DialogTitle, Button, List, ListItem, ListItemText, IconButton,
 } from '@mui/material';
@@ -6,8 +8,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PropTypes from 'prop-types';
 import { deleteOrg, getOrgs } from '../../api/supportOrgApi';
-import SupportOrgDialog from './SupportOrgDialog';
 import { checkUser } from '../../utils/auth';
+
+// Lazy load the SupportOrgDialog component
+const SupportOrgDialog = React.lazy(() => import('./SupportOrgDialog'));
 
 export default function SupportOrgListDialog({ token }) {
   const [isListDialogOpen, setIsListDialogOpen] = useState(false);
@@ -27,7 +31,7 @@ export default function SupportOrgListDialog({ token }) {
 
   useEffect(() => {
     fetchOrgs();
-  }, [fetchOrgs, orgs]);
+  }, [fetchOrgs]);
 
   useEffect(() => {
     const fetchUserId = async () => {
@@ -105,14 +109,16 @@ export default function SupportOrgListDialog({ token }) {
           </Button>
         </DialogActions>
       </Dialog>
-      <SupportOrgDialog
-        existingOrg={selectedOrg}
-        open={isAddOrgDialogOpen}
-        onCloseDialog={handleCloseAddOrgDialog}
-        userId={userId}
-        onSaveOrg={handleSaveOrg}
-        token={token}
-      />
+      <Suspense fallback={<div>Loading...</div>}>
+        <SupportOrgDialog
+          existingOrg={selectedOrg}
+          open={isAddOrgDialogOpen}
+          onCloseDialog={handleCloseAddOrgDialog}
+          userId={userId}
+          onSaveOrg={handleSaveOrg}
+          token={token}
+        />
+      </Suspense>
     </div>
   );
 }

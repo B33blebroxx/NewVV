@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { Box, Divider, Button } from '@mui/material';
 import { useAuth } from '../../utils/context/authContext';
 import { getAboutMe } from '../../api/aboutMeApi';
 import { getMissionStatement } from '../../api/missionStatementApi';
-import MissionStatementDialog from '../../components/dialogs/MissionStatementDialog';
-import QuoteListDialog from '../../components/dialogs/QuoteListDialog';
-import SupportOrgListDialog from '../../components/dialogs/SupportListDialog';
-import AboutMeDialog from '../../components/dialogs/AboutMeDialog';
+
+// Lazy load the dialogs
+const MissionStatementDialog = React.lazy(() => import('../../components/dialogs/MissionStatementDialog'));
+const QuoteListDialog = React.lazy(() => import('../../components/dialogs/QuoteListDialog'));
+const SupportOrgListDialog = React.lazy(() => import('../../components/dialogs/SupportListDialog'));
+const AboutMeDialog = React.lazy(() => import('../../components/dialogs/AboutMeDialog'));
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -64,36 +66,39 @@ export default function Dashboard() {
         <Divider sx={{ backgroundColor: 'black' }} />
         <br /><br />
       </Box>
-      <Box className="dashboard">
-        <Button variant="contained" onClick={handleOpenMissionStatementDialog}>
-          Edit Mission Statement
-        </Button>
-        <MissionStatementDialog
-          token={token}
-          open={openMissionStatementDialog}
-          onClose={handleCloseMissionStatementDialog}
-          missionData={missionData}
-          refreshMissionData={fetchMissionData}
-        />
-      </Box>
-      <Box className="dashboard">
-        <QuoteListDialog token={token} userId={user?.userId} />
-      </Box>
-      <Box className="dashboard">
-        <SupportOrgListDialog token={token} userId={user?.userId} />
-      </Box>
-      <Box className="dashboard">
-        <Button variant="contained" onClick={handleOpenAboutMeDialog}>
-          Edit About Me
-        </Button>
-        <AboutMeDialog
-          token={token}
-          open={openAboutMeDialog}
-          onClose={handleCloseAboutMeDialog}
-          aboutMeData={aboutMeData}
-          refreshAboutMeData={fetchAboutMeData}
-        />
-      </Box>
+
+      <Suspense fallback={<div>Loading...</div>}>
+        <Box className="dashboard">
+          <Button variant="contained" onClick={handleOpenMissionStatementDialog}>
+            Edit Mission Statement
+          </Button>
+          <MissionStatementDialog
+            token={token}
+            open={openMissionStatementDialog}
+            onClose={handleCloseMissionStatementDialog}
+            missionData={missionData}
+            refreshMissionData={fetchMissionData}
+          />
+        </Box>
+        <Box className="dashboard">
+          <QuoteListDialog token={token} userId={user?.userId} />
+        </Box>
+        <Box className="dashboard">
+          <SupportOrgListDialog token={token} userId={user?.userId} />
+        </Box>
+        <Box className="dashboard">
+          <Button variant="contained" onClick={handleOpenAboutMeDialog}>
+            Edit About Me
+          </Button>
+          <AboutMeDialog
+            token={token}
+            open={openAboutMeDialog}
+            onClose={handleCloseAboutMeDialog}
+            aboutMeData={aboutMeData}
+            refreshAboutMeData={fetchAboutMeData}
+          />
+        </Box>
+      </Suspense>
     </Box>
   );
 }

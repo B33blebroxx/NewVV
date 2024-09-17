@@ -1,9 +1,13 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, {
+  useEffect, useState, useCallback, Suspense,
+} from 'react';
 import { Box } from '@mui/material';
 import Image from 'next/image';
 import logo from '../utils/data/ValVenisLogo.png';
 import { getMissionStatement } from '../api/missionStatementApi';
-import MissionStatement from '../components/cards/MissionStatementCard';
+import Loading from '../components/Loading';
+
+const MissionStatement = React.lazy(() => import('../components/cards/MissionStatementCard'));
 
 function Home() {
   const [missionStatement, setMissionStatement] = useState({});
@@ -28,7 +32,9 @@ function Home() {
         <Image src={logo} alt="Logo" width={300} height={250} style={{ marginBottom: '20px' }} />
       </Box>
       <Box>
-        <MissionStatement missionStatement={missionStatement} />
+        <Suspense fallback={<Loading />}>
+          <MissionStatement missionStatement={missionStatement} />
+        </Suspense>
       </Box>
     </Box>
   );
