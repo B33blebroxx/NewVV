@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField,
 } from '@mui/material';
+import DOMPurify from 'dompurify';
 import { signIn } from '../../utils/auth';
 
 const SignInDialog = ({ open, onClose }) => {
@@ -12,7 +13,8 @@ const SignInDialog = ({ open, onClose }) => {
 
   const handleSubmit = async () => {
     try {
-      await signIn(email, password);
+      const sanitizedEmail = DOMPurify.sanitize(email);
+      await signIn(sanitizedEmail, password);
       onClose();
       window.location.reload();
     } catch (error) {

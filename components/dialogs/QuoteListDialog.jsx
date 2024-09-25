@@ -7,6 +7,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PropTypes from 'prop-types';
+import DOMPurify from 'dompurify';
 import { deleteQuote, getQuotes } from '../../api/quoteApi';
 import { checkUser } from '../../utils/auth';
 
@@ -23,14 +24,19 @@ export default function QuoteListDialog({ token }) {
   const fetchQuotes = useCallback(async () => {
     try {
       const data = await getQuotes();
-      setQuotes(data);
+      const sanitizedQuotes = data.map((quote) => ({
+        ...quote,
+        quoteText: DOMPurify.sanitize(quote.quoteText), // Sanitize each quote text
+        quoteAuthor: DOMPurify.sanitize(quote.quoteAuthor), // Sanitize each author
+      }));
+      setQuotes(sanitizedQuotes);
     } catch (err) {
       console.error('Error fetching quotes:', err.message);
     }
   }, []);
 
   useEffect(() => {
-    fetchQuotes();
+    DOMPurify.sanitize(fetchQuotes());
   }, [fetchQuotes]);
 
   useEffect(() => {
