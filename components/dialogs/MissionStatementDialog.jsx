@@ -9,6 +9,7 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
+import DOMPurify from 'dompurify';
 import { checkUser } from '../../utils/auth';
 import { editMissionStatement } from '../../api/missionStatementApi';
 
@@ -27,9 +28,9 @@ export default function MissionStatementDialog({
 
   useEffect(() => {
     if (missionData && open) {
-      setWelcomeMessage(missionData.welcomeMessage || '');
-      setMissionStatementText(missionData.missionStatementText || '');
-      setMissionStatementAcronym(missionData.missionStatementAcronym || '');
+      setWelcomeMessage(DOMPurify.sanitize(missionData.welcomeMessage || ''));
+      setMissionStatementText(DOMPurify.sanitize(missionData.missionStatementText || ''));
+      setMissionStatementAcronym(DOMPurify.sanitize(missionData.missionStatementAcronym || ''));
     }
   }, [missionData, open]);
 
@@ -66,9 +67,9 @@ export default function MissionStatementDialog({
 
     try {
       const missionDataToSave = {
-        welcomeMessage,
-        missionStatementText,
-        missionStatementAcronym,
+        welcomeMessage: DOMPurify.sanitize(welcomeMessage),
+        missionStatementText: DOMPurify.sanitize(missionStatementText),
+        missionStatementAcronym: DOMPurify.sanitize(missionStatementAcronym),
         userId, // Include userId retrieved from checkUser
       };
 

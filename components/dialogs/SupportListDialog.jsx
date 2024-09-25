@@ -7,6 +7,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PropTypes from 'prop-types';
+import DOMPurify from 'dompurify';
 import { deleteOrg, getOrgs } from '../../api/supportOrgApi';
 import { checkUser } from '../../utils/auth';
 
@@ -23,7 +24,12 @@ export default function SupportOrgListDialog({ token }) {
   const fetchOrgs = useCallback(async () => {
     try {
       const data = await getOrgs(token);
-      setOrgs(data);
+      const sanitizedOrgs = data.map((org) => ({
+        ...org,
+        supportOrgName: DOMPurify.sanitize(org.supportOrgName),
+        supportOrgDescription: DOMPurify.sanitize(org.supportOrgDescription),
+      }));
+      setOrgs(sanitizedOrgs);
     } catch (err) {
       console.error('Error fetching support orgs:', err.message);
     }

@@ -11,6 +11,7 @@ import {
   Input,
 } from '@mui/material';
 import { Image } from 'react-bootstrap';
+import DOMPurify from 'dompurify';
 import { createOrg, updateOrg } from '../../api/supportOrgApi';
 
 export default function SupportOrgDialog({
@@ -25,11 +26,11 @@ export default function SupportOrgDialog({
 
   useEffect(() => {
     if (existingOrg) {
-      setOrgName(existingOrg.supportOrgName);
-      setOrgSummary(existingOrg.supportOrgSummary);
-      setOrgPhone(existingOrg.supportOrgPhone);
-      setOrgUrl(existingOrg.supportOrgUrl);
-      setOrgLogo(existingOrg.supportOrgLogo);
+      setOrgName(DOMPurify.sanitize(existingOrg.supportOrgName));
+      setOrgSummary(DOMPurify.sanitize(existingOrg.supportOrgSummary));
+      setOrgPhone(DOMPurify.sanitize(existingOrg.supportOrgPhone));
+      setOrgUrl(DOMPurify.sanitize(existingOrg.supportOrgUrl));
+      setOrgLogo(DOMPurify.sanitize(existingOrg.supportOrgLogo));
     } else {
       setOrgName('');
       setOrgSummary('');
@@ -68,11 +69,11 @@ export default function SupportOrgDialog({
 
     try {
       const orgData = {
-        supportOrgName: orgName,
-        supportOrgSummary: orgSummary,
-        supportOrgPhone: orgPhone,
-        supportOrgUrl: orgUrl,
-        supportOrgLogo: orgLogo,
+        supportOrgName: DOMPurify.sanitize(orgName),
+        supportOrgSummary: DOMPurify.sanitize(orgSummary),
+        supportOrgPhone: DOMPurify.sanitize(orgPhone),
+        supportOrgUrl: DOMPurify.sanitize(orgUrl),
+        supportOrgLogo: DOMPurify.sanitize(orgLogo),
         userId,
       };
 

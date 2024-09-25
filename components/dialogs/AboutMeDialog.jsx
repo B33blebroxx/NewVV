@@ -11,6 +11,7 @@ import {
   Input,
 } from '@mui/material';
 import { Image } from 'react-bootstrap';
+import DOMPurify from 'dompurify';
 import { editAboutMe } from '../../api/aboutMeApi';
 import { checkUser } from '../../utils/auth'; // Import checkUser API
 
@@ -30,10 +31,10 @@ export default function AboutMeDialog({
 
   useEffect(() => {
     if (aboutMeData && open) {
-      setAboutMeHeader(aboutMeData.aboutMeHeader || '');
-      setAboutMeText(aboutMeData.aboutMeText || '');
-      setAboutMeImage(aboutMeData.aboutMeImage || '');
-      setAboutMeProfileLink(aboutMeData.aboutMeProfileLink || '');
+      setAboutMeHeader(DOMPurify.sanitize(aboutMeData.aboutMeHeader || ''));
+      setAboutMeText(DOMPurify.sanitize(aboutMeData.aboutMeText || ''));
+      setAboutMeImage(DOMPurify.sanitize(aboutMeData.aboutMeImage || ''));
+      setAboutMeProfileLink(DOMPurify.sanitize(aboutMeData.aboutMeProfileLink || ''));
     }
   }, [aboutMeData, open]);
 
@@ -86,10 +87,10 @@ export default function AboutMeDialog({
 
     try {
       const aboutMeDataToSave = {
-        aboutMeHeader,
-        aboutMeText,
-        aboutMeImage,
-        aboutMeProfileLink,
+        aboutMeHeader: DOMPurify.sanitize(aboutMeHeader),
+        aboutMeText: DOMPurify.sanitize(aboutMeText),
+        aboutMeImage: DOMPurify.sanitize(aboutMeImage),
+        aboutMeProfileLink: DOMPurify.sanitize(aboutMeProfileLink),
         userId, // Include userId retrieved from checkUser
       };
 

@@ -9,6 +9,7 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
+import DOMPurify from 'dompurify';
 import { addQuote, updateQuote } from '../../api/quoteApi';
 
 export default function QuoteDialog({
@@ -20,8 +21,8 @@ export default function QuoteDialog({
   useEffect(() => {
     if (existingQuote) {
       setQuoteData({
-        quoteText: existingQuote.quoteText,
-        quoteAuthor: existingQuote.quoteAuthor,
+        quoteText: DOMPurify.sanitize(existingQuote.quoteText),
+        quoteAuthor: DOMPurify.sanitize(existingQuote.quoteAuthor),
       });
     } else {
       setQuoteData({ quoteText: '', quoteAuthor: '' });
@@ -36,7 +37,10 @@ export default function QuoteDialog({
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
-    setQuoteData((prevData) => ({ ...prevData, [id]: value }));
+    setQuoteData((prevData) => ({
+      ...prevData,
+      [id]: DOMPurify.sanitize(value),
+    }));
   };
 
   const handleSaveQuote = async () => {
