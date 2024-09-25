@@ -1,19 +1,25 @@
+import { useMemo } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import { AuthProvider } from '../utils/context/authContext';
+import ViewDirectorBasedOnUserAuthStatus from '../utils/ViewDirector';
 /* eslint-disable react/prop-types */
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/globals.css';
-import { AuthProvider } from '../utils/context/authContext';
-import ViewDirectorBasedOnUserAuthStatus from '../utils/ViewDirector';
 
 function MyApp({ Component, pageProps }) {
+  const memoizedViewDirector = useMemo(() => (
+    <ViewDirectorBasedOnUserAuthStatus
+      component={Component}
+      pageProps={pageProps}
+    />
+  ), [Component, pageProps]);
+
   return (
-    <AuthProvider>
-      {' '}
-      {/* gives children components access to user and auth methods */}
-      <ViewDirectorBasedOnUserAuthStatus
-        component={Component}
-        pageProps={pageProps}
-      />
-    </AuthProvider>
+    <ErrorBoundary fallback={<div>Sorry, something went wrong.</div>}>
+      <AuthProvider>
+        {memoizedViewDirector}
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 
