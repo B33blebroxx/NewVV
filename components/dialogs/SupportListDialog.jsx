@@ -1,5 +1,5 @@
 import React, {
-  useState, useEffect, useCallback, Suspense,
+  useState, useEffect, Suspense,
 } from 'react';
 import {
   Dialog, DialogActions, DialogContent, DialogTitle, Button, List, ListItem, ListItemText, IconButton,
@@ -21,7 +21,8 @@ export default function SupportOrgListDialog({ token }) {
   const [selectedOrg, setSelectedOrg] = useState(null);
   const [isAddOrgDialogOpen, setIsAddOrgDialogOpen] = useState(false);
 
-  const fetchOrgs = useCallback(async () => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const fetchOrgs = async () => {
     try {
       const data = await getOrgs(token);
       const sanitizedOrgs = data.map((org) => ({
@@ -33,7 +34,7 @@ export default function SupportOrgListDialog({ token }) {
     } catch (err) {
       console.error('Error fetching support orgs:', err.message);
     }
-  }, [token]);
+  };
 
   useEffect(() => {
     fetchOrgs();
