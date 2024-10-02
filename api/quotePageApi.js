@@ -17,6 +17,7 @@ const editQuotePageInfo = async (quotePage) => {
     headers: {
       'Content-Type': 'application/json',
     },
+    credentials: 'include',
     body: JSON.stringify(quotePage),
   });
   const data = await response.json();

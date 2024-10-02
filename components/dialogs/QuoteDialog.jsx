@@ -13,7 +13,7 @@ import DOMPurify from 'dompurify';
 import { addQuote, updateQuote } from '../../api/quoteApi';
 
 export default function QuoteDialog({
-  token, existingQuote, onCloseDialog, open, userId, onSaveQuote,
+  existingQuote, onCloseDialog, open, userId, onSaveQuote,
 }) {
   const [quoteData, setQuoteData] = useState({ quoteText: '', quoteAuthor: '' });
   const [error, setError] = useState('');
@@ -54,9 +54,9 @@ export default function QuoteDialog({
       const quotePayload = { ...quoteData, userId };
 
       if (existingQuote) {
-        await updateQuote(existingQuote.id, quotePayload, token);
+        await updateQuote(existingQuote.id, quotePayload);
       } else {
-        await addQuote(quotePayload, token);
+        await addQuote(quotePayload);
       }
 
       if (onSaveQuote) {
@@ -106,7 +106,6 @@ export default function QuoteDialog({
 }
 
 QuoteDialog.propTypes = {
-  token: PropTypes.string,
   existingQuote: PropTypes.shape({
     id: PropTypes.number,
     quoteText: PropTypes.string,
@@ -123,5 +122,4 @@ QuoteDialog.defaultProps = {
   onCloseDialog: null,
   onSaveQuote: null,
   userId: null,
-  token: null,
 };

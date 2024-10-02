@@ -15,7 +15,7 @@ import DOMPurify from 'dompurify';
 import { createOrg, updateOrg } from '../../api/supportOrgApi';
 
 export default function SupportOrgDialog({
-  token, existingOrg, onCloseDialog, open, userId, onSaveOrg,
+  existingOrg, onCloseDialog, open, userId, onSaveOrg,
 }) {
   const [orgName, setOrgName] = useState('');
   const [orgSummary, setOrgSummary] = useState('');
@@ -78,9 +78,9 @@ export default function SupportOrgDialog({
       };
 
       if (existingOrg) {
-        await updateOrg({ ...orgData, id: existingOrg.id }, token);
+        await updateOrg({ ...orgData, id: existingOrg.id });
       } else {
-        await createOrg(orgData, token);
+        await createOrg(orgData);
       }
 
       if (onSaveOrg) {
@@ -163,7 +163,6 @@ export default function SupportOrgDialog({
 }
 
 SupportOrgDialog.propTypes = {
-  token: PropTypes.string.isRequired,
   existingOrg: PropTypes.shape({
     id: PropTypes.string,
     supportOrgName: PropTypes.string,

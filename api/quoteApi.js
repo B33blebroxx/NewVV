@@ -13,10 +13,10 @@ const getQuotes = async () => {
   return data;
 };
 
-const addQuote = async (newQuote, token) => {
+const addQuote = async (newQuote) => {
   try {
     const response = await axios.post(`${databaseUrl}/quotes`, newQuote, {
-      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
     });
     return response.data;
   } catch (error) {
@@ -24,10 +24,10 @@ const addQuote = async (newQuote, token) => {
   }
 };
 
-const updateQuote = async (id, updatedQuote, token) => {
+const updateQuote = async (id, updatedQuote) => {
   try {
     const response = await axios.put(`${databaseUrl}/quotes/${id}`, updatedQuote, {
-      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
     });
     return response.data;
   } catch (error) {
@@ -35,10 +35,10 @@ const updateQuote = async (id, updatedQuote, token) => {
   }
 };
 
-const deleteQuote = async (id, token) => {
+const deleteQuote = async (id) => {
   try {
     const response = await axios.delete(`${databaseUrl}/quotes/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
     });
     return response.data;
   } catch (error) {

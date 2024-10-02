@@ -17,6 +17,7 @@ const editSupportPageData = async (supportPage) => {
     headers: {
       'Content-Type': 'application/json',
     },
+    credentials: 'include',
     body: JSON.stringify(supportPage),
   });
   const data = await response.json();

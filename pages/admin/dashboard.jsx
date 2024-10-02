@@ -12,7 +12,6 @@ const AboutMeDialog = React.lazy(() => import('../../components/dialogs/AboutMeD
 
 export default function Dashboard() {
   const { user } = useAuth();
-  const token = localStorage.getItem('authToken');
   const [openAboutMeDialog, setOpenAboutMeDialog] = useState(false);
   const [openMissionStatementDialog, setOpenMissionStatementDialog] = useState(false); // For mission statement dialog
   const [aboutMeData, setAboutMeData] = useState(null);
@@ -73,7 +72,6 @@ export default function Dashboard() {
             Edit Mission Statement
           </Button>
           <MissionStatementDialog
-            token={token}
             open={openMissionStatementDialog}
             onClose={handleCloseMissionStatementDialog}
             missionData={missionData}
@@ -81,17 +79,16 @@ export default function Dashboard() {
           />
         </Box>
         <Box className="dashboard">
-          <QuoteListDialog token={token} userId={user?.userId} />
+          <QuoteListDialog userId={user?.userId} />
         </Box>
         <Box className="dashboard">
-          <SupportOrgListDialog token={token} userId={user?.userId} />
+          <SupportOrgListDialog userId={user?.userId} />
         </Box>
         <Box className="dashboard">
           <Button variant="contained" onClick={handleOpenAboutMeDialog}>
             Edit About Me
           </Button>
           <AboutMeDialog
-            token={token}
             open={openAboutMeDialog}
             onClose={handleCloseAboutMeDialog}
             aboutMeData={aboutMeData}

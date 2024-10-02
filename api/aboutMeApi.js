@@ -16,14 +16,14 @@ const getAboutMe = async () => {
   return data;
 };
 
-const editAboutMe = async (aboutMe, token, userId) => {
+const editAboutMe = async (aboutMe, userId) => {
   const response = await fetch(`${databaseUrl}/aboutme`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
       userId,
     },
+    credentials: 'include',
     body: JSON.stringify(aboutMe),
   });
 

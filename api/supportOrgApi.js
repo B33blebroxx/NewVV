@@ -6,44 +6,45 @@ const getOrgs = async () => {
     headers: {
       'Content-Type': 'application/json',
     },
+    credentials: 'include',
   });
   const data = await response.json();
   return data;
 };
 
-const createOrg = async (org, token) => {
+const createOrg = async (org) => {
   const response = await fetch(`${databaseUrl}/supportorgs`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
     },
+    credentials: 'include',
     body: JSON.stringify(org),
   });
   const data = await response.json();
   return data;
 };
 
-const updateOrg = async (org, token) => {
+const updateOrg = async (org) => {
   const response = await fetch(`${databaseUrl}/supportorgs/${org.id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
     },
+    credentials: 'include',
     body: JSON.stringify(org),
   });
   const data = await response.json();
   return data;
 };
 
-const deleteOrg = async (orgId, token) => {
+const deleteOrg = async (orgId) => {
   const response = await fetch(`${databaseUrl}/supportorgs/${orgId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
     },
+    credentials: 'include',
   });
   const data = await response.json();
   return data;
