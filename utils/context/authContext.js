@@ -13,20 +13,26 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const handleSignIn = useCallback(async (username, password) => {
+  const handleSignIn = useCallback(async (email, password) => {
     try {
-      const userData = await signIn(username, password);
-      setUser(userData);
+      const response = await signIn(email, password);
+      setUser(response.user);
+      return response.user;
     } catch (error) {
       console.error('Sign-in failed:', error.message);
       setUser(null);
-      throw error; // Re-throw the error so it can be handled by the component
+      throw error;
     }
   }, []);
 
-  const handleSignOut = useCallback(() => {
-    signOut();
-    setUser(null);
+  const handleSignOut = useCallback(async () => {
+    try {
+      await signOut();
+      setUser(null);
+    } catch (error) {
+      console.error('Sign-out failed:', error.message);
+      throw error;
+    }
   }, []);
 
   const handleRegister = useCallback(async (userInfo) => {
@@ -34,7 +40,7 @@ const AuthProvider = ({ children }) => {
       await registerUser(userInfo);
     } catch (error) {
       console.error('Registration failed:', error.message);
-      throw error; // Re-throw the error so it can be handled by the component
+      throw error;
     }
   }, []);
 

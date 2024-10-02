@@ -6,7 +6,6 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
 import { deleteOrg, getOrgs } from '../../api/supportOrgApi';
 import { checkUser } from '../../utils/auth';
@@ -14,7 +13,7 @@ import { checkUser } from '../../utils/auth';
 // Lazy load the SupportOrgDialog component
 const SupportOrgDialog = React.lazy(() => import('./SupportOrgDialog'));
 
-export default function SupportOrgListDialog({ token }) {
+export default function SupportOrgListDialog() {
   const [isListDialogOpen, setIsListDialogOpen] = useState(false);
   const [userId, setUserId] = useState(null);
   const [orgs, setOrgs] = useState([]);
@@ -24,7 +23,7 @@ export default function SupportOrgListDialog({ token }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const fetchOrgs = async () => {
     try {
-      const data = await getOrgs(token);
+      const data = await getOrgs();
       const sanitizedOrgs = data.map((org) => ({
         ...org,
         supportOrgName: DOMPurify.sanitize(org.supportOrgName),
@@ -75,7 +74,7 @@ export default function SupportOrgListDialog({ token }) {
 
   const handleDelete = async (orgId) => {
     try {
-      await deleteOrg(orgId, token);
+      await deleteOrg(orgId);
       await fetchOrgs();
     } catch (err) {
       console.error('Error deleting support org:', err.message);
@@ -123,13 +122,8 @@ export default function SupportOrgListDialog({ token }) {
           onCloseDialog={handleCloseAddOrgDialog}
           userId={userId}
           onSaveOrg={handleSaveOrg}
-          token={token}
         />
       </Suspense>
     </div>
   );
 }
-
-SupportOrgListDialog.propTypes = {
-  token: PropTypes.string.isRequired,
-};

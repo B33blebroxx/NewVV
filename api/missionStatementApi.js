@@ -11,14 +11,14 @@ const getMissionStatement = async () => {
   return data;
 };
 
-const editMissionStatement = async (missionStatement, token, userId) => {
+const editMissionStatement = async (missionStatement, userId) => {
   const response = await fetch(`${databaseUrl}/missionstatement`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
       userId,
     },
+    credentials: 'include',
     body: JSON.stringify(missionStatement),
   });
 

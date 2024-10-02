@@ -16,7 +16,6 @@ import { editAboutMe } from '../../api/aboutMeApi';
 import { checkUser } from '../../utils/auth'; // Import checkUser API
 
 export default function AboutMeDialog({
-  token,
   open,
   onClose,
   aboutMeData,
@@ -42,7 +41,7 @@ export default function AboutMeDialog({
     // Fetch userId using checkUser API when the dialog opens
     const fetchUserId = async () => {
       try {
-        const data = await checkUser(token);
+        const data = await checkUser();
         if (data && data.user && data.user.userId) {
           setUserId(data.user.userId);
         } else {
@@ -56,7 +55,7 @@ export default function AboutMeDialog({
     if (open) {
       fetchUserId();
     }
-  }, [token, open]);
+  }, [userId, open]);
 
   const handleClose = () => {
     setError('');
@@ -94,7 +93,7 @@ export default function AboutMeDialog({
         userId, // Include userId retrieved from checkUser
       };
 
-      await editAboutMe(aboutMeDataToSave, token);
+      await editAboutMe(aboutMeDataToSave);
 
       // Refresh the parent component's data
       if (refreshAboutMeData) {
@@ -176,7 +175,6 @@ export default function AboutMeDialog({
 }
 
 AboutMeDialog.propTypes = {
-  token: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   aboutMeData: PropTypes.shape({

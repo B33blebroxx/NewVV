@@ -14,7 +14,6 @@ import { checkUser } from '../../utils/auth';
 import { editMissionStatement } from '../../api/missionStatementApi';
 
 export default function MissionStatementDialog({
-  token,
   open,
   onClose,
   missionData,
@@ -38,7 +37,7 @@ export default function MissionStatementDialog({
     // Fetch userId using checkUser API when the dialog opens
     const fetchUserId = async () => {
       try {
-        const data = await checkUser(token);
+        const data = await checkUser();
         if (data && data.user && data.user.userId) {
           setUserId(data.user.userId);
         } else {
@@ -52,7 +51,7 @@ export default function MissionStatementDialog({
     if (open) {
       fetchUserId();
     }
-  }, [token, open]);
+  }, [open]);
 
   const handleClose = () => {
     setError('');
@@ -73,7 +72,7 @@ export default function MissionStatementDialog({
         userId, // Include userId retrieved from checkUser
       };
 
-      await editMissionStatement(missionDataToSave, token);
+      await editMissionStatement(missionDataToSave);
 
       // Refresh the parent component's data
       if (refreshMissionData) {
@@ -135,7 +134,6 @@ export default function MissionStatementDialog({
 }
 
 MissionStatementDialog.propTypes = {
-  token: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   missionData: PropTypes.shape({

@@ -1,25 +1,15 @@
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from './context/authContext';
 import Loading from '../components/Loading';
 import Signin from '../components/Signin';
 import NavBar from '../components/drawers/NavBar';
-import { checkTokenOnInitialVisit } from './auth';
 
 const ViewDirectorBasedOnUserAuthStatus = ({ component: Component, pageProps }) => {
   const { user, loading } = useAuth();
   const [showSignIn, setShowSignIn] = useState(false);
   const router = useRouter();
-
-  useEffect(() => {
-    // Run the token check only on the initial visit
-    checkTokenOnInitialVisit();
-  }, []);
-
-  if (loading) {
-    return <Loading />;
-  }
 
   // Handle admin button click to show the sign-in dialog
   const handleAdminClick = () => {
@@ -35,6 +25,10 @@ const ViewDirectorBasedOnUserAuthStatus = ({ component: Component, pageProps }) 
     setShowSignIn(false);
     window.location.reload();
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>

@@ -6,7 +6,6 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import PropTypes from 'prop-types';
 import DOMPurify from 'dompurify';
 import { deleteQuote, getQuotes } from '../../api/quoteApi';
 import { checkUser } from '../../utils/auth';
@@ -14,7 +13,7 @@ import { checkUser } from '../../utils/auth';
 // Lazy load the QuoteDialog component
 const QuoteDialog = React.lazy(() => import('./QuoteDialog'));
 
-export default function QuoteListDialog({ token }) {
+export default function QuoteListDialog() {
   const [isListDialogOpen, setIsListDialogOpen] = useState(false);
   const [isAddQuoteDialogOpen, setIsAddQuoteDialogOpen] = useState(false);
   const [userId, setUserId] = useState(null);
@@ -74,7 +73,7 @@ export default function QuoteListDialog({ token }) {
 
   const handleDelete = async (quoteId) => {
     try {
-      await deleteQuote(quoteId, token);
+      await deleteQuote(quoteId);
       await fetchQuotes();
     } catch (err) {
       console.error('Error deleting quote:', err.message);
@@ -117,7 +116,6 @@ export default function QuoteListDialog({ token }) {
       </Dialog>
       <Suspense fallback={<div>Loading...</div>}>
         <QuoteDialog
-          token={token}
           existingQuote={selectedQuote}
           open={isAddQuoteDialogOpen}
           onCloseDialog={handleCloseAddQuoteDialog}
@@ -128,7 +126,3 @@ export default function QuoteListDialog({ token }) {
     </div>
   );
 }
-
-QuoteListDialog.propTypes = {
-  token: PropTypes.string.isRequired,
-};
