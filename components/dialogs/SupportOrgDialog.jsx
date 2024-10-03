@@ -164,7 +164,7 @@ export default function SupportOrgDialog({
 
 SupportOrgDialog.propTypes = {
   existingOrg: PropTypes.shape({
-    id: PropTypes.string,
+    id: PropTypes.number,
     supportOrgName: PropTypes.string,
     supportOrgSummary: PropTypes.string,
     supportOrgPhone: PropTypes.string,
