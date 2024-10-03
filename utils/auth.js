@@ -27,10 +27,7 @@ const checkUser = async () => {
 
 const signIn = async (email, password) => {
   try {
-    console.log('Attempting sign in for email:', email);
     const response = await client.post('/auth/login', { email, password });
-    console.log('Sign in response:', response);
-    console.log('Response headers:', response.headers);
     return response.data;
   } catch (error) {
     console.error('Error during sign-in:', error.response ? error.response.data : error.message);
@@ -44,7 +41,7 @@ const signOut = async () => {
     });
     Router.push('/');
   } catch (error) {
-    console.error('Error during sign-out:', error.message);
+    console.error('Error during sign-out:', error.response ? error.response.data : error.message);
   }
 };
 
