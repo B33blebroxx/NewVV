@@ -3,10 +3,9 @@ import { Box, Divider, Button } from '@mui/material';
 import { useAuth } from '../../utils/context/authContext';
 import { getAboutMe } from '../../api/aboutMeApi';
 import { getMissionStatement } from '../../api/missionStatementApi';
-import { getQuotePageInfo } from '../../api/quotePageApi'; // Import the API call for Quote Page
-import { getSupportPageData } from '../../api/supportPageApi'; // Import the API call for Support Page
+import { getQuotePageInfo } from '../../api/quotePageApi';
+import { getSupportPageData } from '../../api/supportPageApi';
 
-// Lazy load the dialogs
 const MissionStatementDialog = React.lazy(() => import('../../components/dialogs/MissionStatementDialog'));
 const QuoteListDialog = React.lazy(() => import('../../components/dialogs/QuoteListDialog'));
 const SupportOrgListDialog = React.lazy(() => import('../../components/dialogs/SupportListDialog'));
@@ -18,24 +17,40 @@ export default function Dashboard() {
   const { user } = useAuth();
   const [openAboutMeDialog, setOpenAboutMeDialog] = useState(false);
   const [openMissionStatementDialog, setOpenMissionStatementDialog] = useState(false);
-  const [openQuotePageDialog, setOpenQuotePageDialog] = useState(false); // For QuotePage dialog
-  const [openSupportPageDialog, setOpenSupportPageDialog] = useState(false); // For SupportPage dialog
+  const [openQuotePageDialog, setOpenQuotePageDialog] = useState(false);
+  const [openSupportPageDialog, setOpenSupportPageDialog] = useState(false);
 
-  // State to hold page data only when needed
   const [aboutMeData, setAboutMeData] = useState(null);
   const [missionData, setMissionData] = useState(null);
   const [quotePageData, setQuotePageData] = useState(null);
   const [supportPageData, setSupportPageData] = useState(null);
 
-  const handleOpenAboutMeDialog = () => setOpenAboutMeDialog(true);
+  // Fetch About Me data before opening the dialog
+  const handleOpenAboutMeDialog = async () => {
+    try {
+      const data = await getAboutMe(); // Fetch the About Me data
+      setAboutMeData(data); // Set the fetched data
+      setOpenAboutMeDialog(true); // Open the dialog only after data is set
+    } catch (err) {
+      console.error('Failed to fetch About Me data', err);
+    }
+  };
   const handleCloseAboutMeDialog = () => setOpenAboutMeDialog(false);
 
-  const handleOpenMissionStatementDialog = () => setOpenMissionStatementDialog(true);
+  const handleOpenMissionStatementDialog = async () => {
+    try {
+      const data = await getMissionStatement();
+      setMissionData(data);
+      setOpenMissionStatementDialog(true);
+    } catch (err) {
+      console.error('Failed to fetch mission statement data', err);
+    }
+  };
   const handleCloseMissionStatementDialog = () => setOpenMissionStatementDialog(false);
 
   const handleOpenQuotePageDialog = async () => {
     try {
-      const data = await getQuotePageInfo(); // Fetch Quote Page info only when opening
+      const data = await getQuotePageInfo();
       setQuotePageData(data);
       setOpenQuotePageDialog(true);
     } catch (error) {
@@ -46,7 +61,7 @@ export default function Dashboard() {
 
   const handleOpenSupportPageDialog = async () => {
     try {
-      const data = await getSupportPageData(); // Fetch Support Page info only when opening
+      const data = await getSupportPageData();
       setSupportPageData(data);
       setOpenSupportPageDialog(true);
     } catch (error) {
@@ -54,24 +69,6 @@ export default function Dashboard() {
     }
   };
   const handleCloseSupportPageDialog = () => setOpenSupportPageDialog(false);
-
-  const fetchAboutMeData = async () => {
-    try {
-      const data = await getAboutMe();
-      setAboutMeData(data);
-    } catch (err) {
-      console.error('Failed to fetch About Me data', err);
-    }
-  };
-
-  const fetchMissionData = async () => {
-    try {
-      const data = await getMissionStatement();
-      setMissionData(data);
-    } catch (err) {
-      console.error('Failed to fetch mission statement data', err);
-    }
-  };
 
   return (
     <Box id="dashboard-container">
@@ -92,7 +89,7 @@ export default function Dashboard() {
             open={openMissionStatementDialog}
             onClose={handleCloseMissionStatementDialog}
             missionData={missionData}
-            refreshMissionData={fetchMissionData}
+            refreshMissionData={handleOpenMissionStatementDialog}
           />
         </Box>
         <Box className="dashboard">
@@ -109,11 +106,10 @@ export default function Dashboard() {
             open={openAboutMeDialog}
             onClose={handleCloseAboutMeDialog}
             aboutMeData={aboutMeData}
-            refreshAboutMeData={fetchAboutMeData}
+            refreshAboutMeData={handleOpenAboutMeDialog}
           />
           <Divider sx={{ backgroundColor: 'black', margin: '20px 0' }} />
         </Box>
-        {/* Button and Dialog for Editing Quote Page */}
         <Box className="dashboard">
           <Button variant="contained" color="secondary" onClick={handleOpenQuotePageDialog}>
             Edit Quote Page
@@ -121,12 +117,10 @@ export default function Dashboard() {
           <EditQuotePageDialog
             open={openQuotePageDialog}
             onClose={handleCloseQuotePageDialog}
-            quotePageData={quotePageData} // Pass the fetched quote page data here
-            onSave={handleCloseQuotePageDialog} // Close after saving
+            quotePageData={quotePageData}
+            onSave={handleCloseQuotePageDialog}
           />
         </Box>
-
-        {/* Button and Dialog for Editing Support Page */}
         <Box className="dashboard">
           <Button variant="contained" color="secondary" onClick={handleOpenSupportPageDialog}>
             Edit Support Page
@@ -134,8 +128,8 @@ export default function Dashboard() {
           <EditSupportPageDialog
             open={openSupportPageDialog}
             onClose={handleCloseSupportPageDialog}
-            supportPageData={supportPageData} // Pass the fetched support page data here
-            onSave={handleCloseSupportPageDialog} // Close after saving
+            supportPageData={supportPageData}
+            onSave={handleCloseSupportPageDialog}
           />
         </Box>
       </Suspense>

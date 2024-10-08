@@ -5,6 +5,7 @@ const getAboutMe = async () => {
     headers: {
       'Content-Type': 'application/json',
     },
+    credentials: 'include',
   });
 
   if (!response.ok) {
