@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import DOMPurify from 'dompurify';
 import {
   Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button,
 } from '@mui/material';
@@ -13,23 +14,19 @@ const EditSupportPageDialog = ({ open, onClose, onSave }) => {
   const [error, setError] = useState(null);
   const { user } = useAuth(); // Fetching the current user from the Auth context
 
-  // Function to fetch support page info
-  const fetchSupportPageInfo = async () => {
-    try {
-      const supportPageInfo = await getSupportPageData();
-      setSupportPageHeader(supportPageInfo.supportPageHeader || '');
-      setSupportPageIntro(supportPageInfo.supportPageIntro || '');
-      setError(null); // Reset error on successful fetch
-    } catch (err) {
-      console.error('Failed to fetch support page info:', err);
-      setError('Failed to load support page info');
-    }
-  };
-
-  // Fetch support page info when the dialog is opened
   useEffect(() => {
     if (open) {
-      fetchSupportPageInfo(); // Fetch the data only when the dialog is opened
+      const fetchSupportPageInfo = async () => {
+        try {
+          const supportPageInfo = await getSupportPageData();
+          setSupportPageHeader(DOMPurify.sanitize(supportPageInfo.supportPageHeader || ''));
+          setSupportPageIntro(DOMPurify.sanitize(supportPageInfo.supportPageIntro || ''));
+          setError(null); // Reset error on successful fetch
+        } catch (err) {
+          setError('Failed to load support page info');
+        }
+      };
+      fetchSupportPageInfo();
     }
   }, [open]);
 
@@ -37,8 +34,8 @@ const EditSupportPageDialog = ({ open, onClose, onSave }) => {
     setIsLoading(true);
     try {
       const updatedData = {
-        supportPageHeader,
-        supportPageIntro,
+        supportPageHeader: DOMPurify.sanitize(supportPageHeader),
+        supportPageIntro: DOMPurify.sanitize(supportPageIntro),
         userId: user.userId, // Patch the userId from the authenticated user
       };
 
