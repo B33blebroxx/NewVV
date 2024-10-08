@@ -13,6 +13,35 @@ const registerUser = async (userInfo) => {
   }
 };
 
+const getAllUsers = async () => {
+  try {
+    const response = await client.get('auth/users');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching users:', error.message);
+    throw error;
+  }
+};
+
+const deleteUser = async (id) => {
+  try {
+    await client.delete(`auth/users/${id}`);
+  } catch (error) {
+    console.error('Error deleting user:', error.message);
+    throw error;
+  }
+};
+
+const updateUser = async (id, updatedUser) => {
+  try {
+    const response = await client.put(`auth/users/${id}`, updatedUser);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating user:', error.message);
+    throw error;
+  }
+};
+
 const checkUser = async () => {
   try {
     const response = await client.get('/auth/check', {
@@ -46,5 +75,5 @@ const signOut = async () => {
 };
 
 export {
-  signIn, signOut, checkUser, registerUser,
+  signIn, signOut, checkUser, registerUser, getAllUsers, deleteUser, updateUser,
 };
