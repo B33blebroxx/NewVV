@@ -12,6 +12,7 @@ const SupportOrgListDialog = React.lazy(() => import('../../components/dialogs/S
 const AboutMeDialog = React.lazy(() => import('../../components/dialogs/AboutMeDialog'));
 const EditQuotePageDialog = React.lazy(() => import('../../components/dialogs/QuotePageDialog'));
 const EditSupportPageDialog = React.lazy(() => import('../../components/dialogs/SupportPageDialog'));
+const AdminListDialog = React.lazy(() => import('../../components/dialogs/AdminListDialog')); // Import UserListDialog
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -97,6 +98,9 @@ export default function Dashboard() {
         </Box>
         <Box className="dashboard">
           <SupportOrgListDialog userId={user?.userId} />
+        </Box>
+        <Box className="dashboard">
+          <AdminListDialog /> {/* Integrated UserListDialog */}
         </Box>
         <Box className="dashboard">
           <Button variant="contained" onClick={handleOpenAboutMeDialog}>
