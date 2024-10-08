@@ -17,16 +17,17 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import PropTypes from 'prop-types';
 import Image from 'next/image';
 import logo from '../../utils/data/ValVenisLogo.png';
-import { useAuth } from '../../utils/context/authContext'; // Import useAuth hook to access user state
+import { useAuth } from '../../utils/context/authContext';
+import SignInDialog from '../dialogs/SignInDialog';
 
 export default function NavBar({ onAdminClick }) {
-  const { user, signOut } = useAuth(); // Use signOut function from useAuth
+  const { user, signOut } = useAuth();
   const [open, setOpen] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const [signInDialogOpen, setSignInDialogOpen] = React.useState(false);
 
-  // Update isLoggedIn state whenever user state changes
   React.useEffect(() => {
-    setIsLoggedIn(!!user); // Set isLoggedIn to true if user is not null
+    setIsLoggedIn(!!user);
   }, [user]);
 
   const toggleDrawer = (newOpen) => () => {
@@ -34,16 +35,23 @@ export default function NavBar({ onAdminClick }) {
   };
 
   const handleLogout = () => {
-    signOut(); // Call signOut function from context
+    signOut();
   };
 
-  const handleAdminLinkClick = () => {
-    onAdminClick(); // Trigger admin click handler
+  const handleAdminClick = () => {
+    if (isLoggedIn) {
+      onAdminClick();
+    } else {
+      setSignInDialogOpen(true);
+    }
+  };
+
+  const handleSignInDialogClose = () => {
+    setSignInDialogOpen(false);
   };
 
   const NavList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
-      {/* Logo at the top */}
       <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
         <Image
           src={logo}
@@ -80,7 +88,7 @@ export default function NavBar({ onAdminClick }) {
         {isLoggedIn && (
           <Link key="admin-dashboard" href="/admin/dashboard" passHref>
             <ListItem disablePadding>
-              <ListItemButton component="a" onClick={handleAdminLinkClick}>
+              <ListItemButton component="a" onClick={handleAdminClick}>
                 <ListItemText primary="Admin Dashboard" sx={{ textAlign: 'center' }} />
               </ListItemButton>
             </ListItem>
@@ -96,12 +104,12 @@ export default function NavBar({ onAdminClick }) {
           my: 3,
         }}
       >
-        <Tooltip title="Admin">
-          <Button variant="outlined" color="primary" onClick={onAdminClick}>
+        <Tooltip title={isLoggedIn ? 'Admin Dashboard' : 'Sign In'}>
+          <Button variant="outlined" color="primary" onClick={handleAdminClick}>
             <AdminPanelSettingsSharpIcon />
           </Button>
         </Tooltip>
-        {isLoggedIn && ( // Conditionally render the logout button if the user is logged in
+        {isLoggedIn && (
           <Tooltip title="Logout">
             <Button
               variant="outlined"
@@ -125,6 +133,10 @@ export default function NavBar({ onAdminClick }) {
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {NavList}
       </Drawer>
+      <SignInDialog
+        open={signInDialogOpen}
+        onClose={handleSignInDialogClose}
+      />
     </div>
   );
 }

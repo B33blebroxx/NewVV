@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import DOMPurify from 'dompurify';
 import {
   Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button,
 } from '@mui/material';
@@ -13,23 +14,19 @@ const EditQuotePageDialog = ({ open, onClose, onSave }) => {
   const [error, setError] = useState(null);
   const { user } = useAuth(); // Fetching the current user from the Auth context
 
-  // Function to fetch quote page info
-  const fetchQuotePageInfo = async () => {
-    try {
-      const quotePageInfo = await getQuotePageInfo();
-      setQuotePageHeader(quotePageInfo.quotePageHeader || '');
-      setQuotePageIntro(quotePageInfo.quotePageIntro || '');
-      setError(null); // Reset error on successful fetch
-    } catch (err) {
-      console.error('Failed to fetch quote page info:', err);
-      setError('Failed to load quote page info');
-    }
-  };
-
-  // Fetch quote page info when the dialog is opened
   useEffect(() => {
     if (open) {
-      fetchQuotePageInfo(); // Fetch the data only when the dialog is opened
+      const fetchQuotePageInfo = async () => {
+        try {
+          const quotePageInfo = await getQuotePageInfo();
+          setQuotePageHeader(DOMPurify.sanitize(quotePageInfo.quotePageHeader || ''));
+          setQuotePageIntro(DOMPurify.sanitize(quotePageInfo.quotePageIntro || ''));
+          setError(null);
+        } catch (err) {
+          setError('Failed to load quote page info');
+        }
+      };
+      fetchQuotePageInfo();
     }
   }, [open]);
 
@@ -37,8 +34,8 @@ const EditQuotePageDialog = ({ open, onClose, onSave }) => {
     setIsLoading(true);
     try {
       const updatedData = {
-        quotePageHeader,
-        quotePageIntro,
+        quotePageHeader: DOMPurify.sanitize(quotePageHeader),
+        quotePageIntro: DOMPurify.sanitize(quotePageIntro),
         userId: user.userId, // Patch the userId from the authenticated user
       };
 
