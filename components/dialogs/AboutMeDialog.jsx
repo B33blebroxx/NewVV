@@ -90,12 +90,11 @@ export default function AboutMeDialog({
         aboutMeText: DOMPurify.sanitize(aboutMeText),
         aboutMeImage: DOMPurify.sanitize(aboutMeImage),
         aboutMeProfileLink: DOMPurify.sanitize(aboutMeProfileLink),
-        userId, // Include userId retrieved from checkUser
+        userId,
       };
 
       await editAboutMe(aboutMeDataToSave);
 
-      // Refresh the parent component's data
       if (refreshAboutMeData) {
         await refreshAboutMeData();
       }
@@ -108,7 +107,7 @@ export default function AboutMeDialog({
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Edit About Me</DialogTitle>
+      <DialogTitle>Edit About Me Page</DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
