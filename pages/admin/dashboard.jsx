@@ -1,5 +1,7 @@
 import React, { useState, Suspense } from 'react';
-import { Box, Divider, Button } from '@mui/material';
+import {
+  Box, Divider, Button, Grid,
+} from '@mui/material';
 import { useAuth } from '../../utils/context/authContext';
 import { getAboutMe } from '../../api/aboutMeApi';
 import { getMissionStatement } from '../../api/missionStatementApi';
@@ -12,7 +14,7 @@ const SupportOrgListDialog = React.lazy(() => import('../../components/dialogs/S
 const AboutMeDialog = React.lazy(() => import('../../components/dialogs/AboutMeDialog'));
 const EditQuotePageDialog = React.lazy(() => import('../../components/dialogs/QuotePageDialog'));
 const EditSupportPageDialog = React.lazy(() => import('../../components/dialogs/SupportPageDialog'));
-const AdminListDialog = React.lazy(() => import('../../components/dialogs/AdminListDialog')); // Import UserListDialog
+const AdminListDialog = React.lazy(() => import('../../components/dialogs/AdminListDialog'));
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -26,12 +28,11 @@ export default function Dashboard() {
   const [quotePageData, setQuotePageData] = useState(null);
   const [supportPageData, setSupportPageData] = useState(null);
 
-  // Fetch About Me data before opening the dialog
   const handleOpenAboutMeDialog = async () => {
     try {
-      const data = await getAboutMe(); // Fetch the About Me data
-      setAboutMeData(data); // Set the fetched data
-      setOpenAboutMeDialog(true); // Open the dialog only after data is set
+      const data = await getAboutMe();
+      setAboutMeData(data);
+      setOpenAboutMeDialog(true);
     } catch (err) {
       console.error('Failed to fetch About Me data', err);
     }
@@ -82,60 +83,67 @@ export default function Dashboard() {
       </Box>
 
       <Suspense fallback={<div>Loading...</div>}>
-        <Box className="dashboard">
-          <Button variant="contained" onClick={handleOpenMissionStatementDialog}>
-            Edit Mission Statement
-          </Button>
-          <MissionStatementDialog
-            open={openMissionStatementDialog}
-            onClose={handleCloseMissionStatementDialog}
-            missionData={missionData}
-            refreshMissionData={handleOpenMissionStatementDialog}
-          />
-        </Box>
-        <Box className="dashboard">
-          <QuoteListDialog userId={user?.userId} />
-        </Box>
-        <Box className="dashboard">
-          <SupportOrgListDialog userId={user?.userId} />
-        </Box>
-        <Box className="dashboard">
-          <AdminListDialog /> {/* Integrated UserListDialog */}
-        </Box>
-        <Box className="dashboard">
-          <Button variant="contained" onClick={handleOpenAboutMeDialog}>
-            Edit About Me
-          </Button>
-          <AboutMeDialog
-            open={openAboutMeDialog}
-            onClose={handleCloseAboutMeDialog}
-            aboutMeData={aboutMeData}
-            refreshAboutMeData={handleOpenAboutMeDialog}
-          />
-          <Divider sx={{ backgroundColor: 'black', margin: '20px 0' }} />
-        </Box>
-        <Box className="dashboard">
-          <Button variant="contained" color="secondary" onClick={handleOpenQuotePageDialog}>
-            Edit Quote Page
-          </Button>
-          <EditQuotePageDialog
-            open={openQuotePageDialog}
-            onClose={handleCloseQuotePageDialog}
-            quotePageData={quotePageData}
-            onSave={handleCloseQuotePageDialog}
-          />
-        </Box>
-        <Box className="dashboard">
-          <Button variant="contained" color="secondary" onClick={handleOpenSupportPageDialog}>
-            Edit Support Page
-          </Button>
-          <EditSupportPageDialog
-            open={openSupportPageDialog}
-            onClose={handleCloseSupportPageDialog}
-            supportPageData={supportPageData}
-            onSave={handleCloseSupportPageDialog}
-          />
-        </Box>
+        <Grid container spacing={2} justifyContent="center">
+          <Grid item>
+            <Button variant="contained" color="primary" onClick={handleOpenMissionStatementDialog}>
+              Edit Landing Page
+            </Button>
+            <MissionStatementDialog
+              open={openMissionStatementDialog}
+              onClose={handleCloseMissionStatementDialog}
+              missionData={missionData}
+              refreshMissionData={handleOpenMissionStatementDialog}
+            />
+          </Grid>
+
+          <Grid item>
+            <Button variant="contained" color="primary" onClick={handleOpenAboutMeDialog}>
+              Edit About Me Page
+            </Button>
+            <AboutMeDialog
+              open={openAboutMeDialog}
+              onClose={handleCloseAboutMeDialog}
+              aboutMeData={aboutMeData}
+              refreshAboutMeData={handleOpenAboutMeDialog}
+            />
+          </Grid>
+
+          <Grid item>
+            <Button variant="contained" color="primary" onClick={handleOpenQuotePageDialog}>
+              Edit Quote Page
+            </Button>
+            <EditQuotePageDialog
+              open={openQuotePageDialog}
+              onClose={handleCloseQuotePageDialog}
+              quotePageData={quotePageData}
+              onSave={handleCloseQuotePageDialog}
+            />
+          </Grid>
+
+          <Grid item>
+            <Button variant="contained" color="primary" onClick={handleOpenSupportPageDialog}>
+              Edit Support Page
+            </Button>
+            <EditSupportPageDialog
+              open={openSupportPageDialog}
+              onClose={handleCloseSupportPageDialog}
+              supportPageData={supportPageData}
+              onSave={handleCloseSupportPageDialog}
+            />
+          </Grid>
+
+          <Grid item>
+            <QuoteListDialog userId={user?.userId} />
+          </Grid>
+
+          <Grid item>
+            <SupportOrgListDialog userId={user?.userId} />
+          </Grid>
+
+          <Grid item>
+            <AdminListDialog />
+          </Grid>
+        </Grid>
       </Suspense>
     </Box>
   );

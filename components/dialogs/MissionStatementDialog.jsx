@@ -34,7 +34,6 @@ export default function MissionStatementDialog({
   }, [missionData, open]);
 
   useEffect(() => {
-    // Fetch userId using checkUser API when the dialog opens
     const fetchUserId = async () => {
       try {
         const data = await checkUser();
@@ -60,7 +59,7 @@ export default function MissionStatementDialog({
 
   const handleSave = async () => {
     if (!welcomeMessage || !missionStatementText || !missionStatementAcronym || !userId) {
-      setError('All fields and user ID are required');
+      setError('All fields are required');
       return;
     }
 
@@ -69,7 +68,7 @@ export default function MissionStatementDialog({
         welcomeMessage: DOMPurify.sanitize(welcomeMessage),
         missionStatementText: DOMPurify.sanitize(missionStatementText),
         missionStatementAcronym: DOMPurify.sanitize(missionStatementAcronym),
-        userId, // Include userId retrieved from checkUser
+        userId,
       };
 
       await editMissionStatement(missionDataToSave);
@@ -81,13 +80,13 @@ export default function MissionStatementDialog({
 
       handleClose();
     } catch (err) {
-      setError(err.message || 'Failed to save mission statement');
+      setError(err.message || 'Failed to save landing page data');
     }
   };
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Edit Mission Statement</DialogTitle>
+      <DialogTitle>Edit Landing Page</DialogTitle>
       <DialogContent>
         <TextField
           autoFocus

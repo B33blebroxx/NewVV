@@ -6,10 +6,10 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemText,
   Divider,
   Button,
   Tooltip,
+  Typography,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AdminPanelSettingsSharpIcon from '@mui/icons-material/AdminPanelSettingsSharp';
@@ -17,6 +17,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import PropTypes from 'prop-types';
 import Image from 'next/image';
 import logo from '../../utils/data/ValVenisLogo.png';
+import transFlag from '../../utils/data/TransFlagVertical.jpg';
 import { useAuth } from '../../utils/context/authContext';
 import SignInDialog from '../dialogs/SignInDialog';
 
@@ -51,7 +52,17 @@ export default function NavBar({ onAdminClick }) {
   };
 
   const NavList = (
-    <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
+    <Box
+      sx={{
+        width: 250,
+        backgroundImage: `url(${transFlag.src})`,
+        backgroundSize: 'contain',
+        backgroundPosition: 'center',
+        height: '100%',
+      }}
+      role="presentation"
+      onClick={toggleDrawer(false)}
+    >
       <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
         <Image
           src={logo}
@@ -80,7 +91,11 @@ export default function NavBar({ onAdminClick }) {
           <Link key={text} href={href} passHref>
             <ListItem disablePadding>
               <ListItemButton component="a">
-                <ListItemText primary={text} sx={{ textAlign: 'center' }} />
+                <Button variant="outlined" style={{ borderWidth: '2px' }} fullWidth>
+                  <Typography variant="body1" sx={{ textTransform: 'none' }}>
+                    {text}
+                  </Typography>
+                </Button>
               </ListItemButton>
             </ListItem>
           </Link>
@@ -89,7 +104,11 @@ export default function NavBar({ onAdminClick }) {
           <Link key="admin-dashboard" href="/admin/dashboard" passHref>
             <ListItem disablePadding>
               <ListItemButton component="a" onClick={handleAdminClick}>
-                <ListItemText primary="Admin Dashboard" sx={{ textAlign: 'center' }} />
+                <Button variant="outlined" style={{ borderWidth: '2px' }} fullWidth>
+                  <Typography variant="body1" sx={{ textTransform: 'none' }}>
+                    Admin Dashboard
+                  </Typography>
+                </Button>
               </ListItemButton>
             </ListItem>
           </Link>
@@ -105,7 +124,7 @@ export default function NavBar({ onAdminClick }) {
         }}
       >
         <Tooltip title={isLoggedIn ? 'Admin Dashboard' : 'Sign In'}>
-          <Button variant="outlined" color="primary" onClick={handleAdminClick}>
+          <Button variant="outlined" sx={{ borderWidth: '2px' }} color="primary" onClick={handleAdminClick}>
             <AdminPanelSettingsSharpIcon />
           </Button>
         </Tooltip>
@@ -116,6 +135,7 @@ export default function NavBar({ onAdminClick }) {
               color="secondary"
               onClick={handleLogout}
               sx={{ mt: 2 }}
+              style={{ borderWidth: '2px' }}
             >
               <LogoutIcon />
             </Button>
@@ -127,8 +147,14 @@ export default function NavBar({ onAdminClick }) {
 
   return (
     <div>
-      <Button onClick={toggleDrawer(true)}>
-        <MenuIcon />
+      <Button
+        onClick={toggleDrawer(true)}
+        sx={{
+          padding: '16px',
+          fontSize: '2rem',
+        }}
+      >
+        <MenuIcon fontSize="inherit" />
       </Button>
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {NavList}
