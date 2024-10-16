@@ -1,34 +1,23 @@
-const databaseUrl = 'https://localhost:7067';
+import client from '../utils/client';
 
 const getMissionStatement = async () => {
-  const response = await fetch(`${databaseUrl}/missionstatement`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  const data = await response.json();
-  return data;
+  const response = await client.get('/missionstatement');
+  return response.data;
 };
 
 const editMissionStatement = async (missionStatement, userId) => {
-  const response = await fetch(`${databaseUrl}/missionstatement`, {
-    method: 'PUT',
+  const response = await client.put('/missionstatement', missionStatement, {
     headers: {
-      'Content-Type': 'application/json',
       userId,
     },
-    credentials: 'include',
-    body: JSON.stringify(missionStatement),
   });
 
-  if (!response.ok) {
-    const errorText = await response.text();
+  if (!response.status === 200) {
+    const errorText = response.statusText;
     throw new Error(`Error ${response.status}: ${errorText}`);
   }
 
-  const data = await response.json();
-  return data;
+  return response.data;
 };
 
 export { getMissionStatement, editMissionStatement };
