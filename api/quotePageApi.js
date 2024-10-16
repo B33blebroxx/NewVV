@@ -1,28 +1,21 @@
-const databaseUrl = 'https://localhost:7067';
+import client from '../utils/client';
 
 const getQuotePageInfo = async () => {
-  const response = await fetch(`${databaseUrl}/quotePage`, {
-    method: 'GET',
+  const response = await client.get('/quotePage', {
     headers: {
       'Content-Type': 'application/json',
     },
-    credentials: 'include',
   });
-  const data = await response.json();
-  return data;
+  return response.data;
 };
 
 const editQuotePageInfo = async (quotePage) => {
-  const response = await fetch(`${databaseUrl}/quotePage`, {
-    method: 'PUT',
+  const response = await client.put('/quotePage', quotePage, {
     headers: {
       'Content-Type': 'application/json',
     },
-    credentials: 'include',
-    body: JSON.stringify(quotePage),
   });
-  const data = await response.json();
-  return data;
+  return response.data;
 };
 
 export { getQuotePageInfo, editQuotePageInfo };

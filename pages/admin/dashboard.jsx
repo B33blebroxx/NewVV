@@ -15,6 +15,7 @@ const AboutMeDialog = React.lazy(() => import('../../components/dialogs/AboutMeD
 const EditQuotePageDialog = React.lazy(() => import('../../components/dialogs/QuotePageDialog'));
 const EditSupportPageDialog = React.lazy(() => import('../../components/dialogs/SupportPageDialog'));
 const AdminListDialog = React.lazy(() => import('../../components/dialogs/AdminListDialog'));
+const ExternalLinkListDialog = React.lazy(() => import('../../components/dialogs/ExternalLinkListDialog'));
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -142,6 +143,10 @@ export default function Dashboard() {
 
           <Grid item>
             <AdminListDialog />
+          </Grid>
+
+          <Grid item>
+            <ExternalLinkListDialog />
           </Grid>
         </Grid>
       </Suspense>

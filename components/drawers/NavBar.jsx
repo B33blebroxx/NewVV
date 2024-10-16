@@ -20,9 +20,11 @@ import logo from '../../utils/data/ValVenisLogo.png';
 import transFlag from '../../utils/data/TransFlagVertical.jpg';
 import { useAuth } from '../../utils/context/authContext';
 import SignInDialog from '../dialogs/SignInDialog';
+import { useExternalLinks } from '../../utils/context/externalLinksContext';
 
 export default function NavBar({ onAdminClick }) {
   const { user, signOut } = useAuth();
+  const { externalLinks, refreshExternalLinks } = useExternalLinks();
   const [open, setOpen] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
   const [signInDialogOpen, setSignInDialogOpen] = React.useState(false);
@@ -30,6 +32,10 @@ export default function NavBar({ onAdminClick }) {
   React.useEffect(() => {
     setIsLoggedIn(!!user);
   }, [user]);
+
+  React.useEffect(() => {
+    refreshExternalLinks();
+  }, [refreshExternalLinks]);
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
@@ -73,33 +79,65 @@ export default function NavBar({ onAdminClick }) {
         />
       </Box>
       <List>
-        {[
-          { text: 'Home', href: '/' },
-          { text: 'Support Organizations', href: '../support-organizations/all' },
-          {
-            text: 'The Trevor Project',
-            href: 'https://www.thetrevorproject.org/',
-          },
-          {
-            text: 'Advocates for Trans Equality',
-            href: 'https://transequality.org/',
-          },
-          { text: 'Quotes', href: '../quotes/all' },
-          { text: 'About Me', href: '/aboutMe' },
-          { text: 'Shop', href: 'https://val-venis.printify.me/products' },
-        ].map(({ text, href }) => (
-          <Link key={text} href={href} passHref>
-            <ListItem disablePadding>
-              <ListItemButton component="a">
-                <Button variant="outlined" style={{ borderWidth: '2px' }} fullWidth>
-                  <Typography variant="body1" sx={{ textTransform: 'none' }}>
-                    {text}
-                  </Typography>
-                </Button>
-              </ListItemButton>
-            </ListItem>
-          </Link>
+        {/* Existing static links */}
+        <Link href="/" passHref>
+          <ListItem disablePadding>
+            <ListItemButton component="a">
+              <Button variant="outlined" style={{ borderWidth: '2px' }} fullWidth>
+                <Typography variant="body1" sx={{ textTransform: 'none' }}>
+                  Home
+                </Typography>
+              </Button>
+            </ListItemButton>
+          </ListItem>
+        </Link>
+        <Link href="../support-organizations/all" passHref>
+          <ListItem disablePadding>
+            <ListItemButton component="a">
+              <Button variant="outlined" style={{ borderWidth: '2px' }} fullWidth>
+                <Typography variant="body1" sx={{ textTransform: 'none' }}>
+                  Support Organizations
+                </Typography>
+              </Button>
+            </ListItemButton>
+          </ListItem>
+        </Link>
+        <Link href="../quotes/all" passHref>
+          <ListItem disablePadding>
+            <ListItemButton component="a">
+              <Button variant="outlined" style={{ borderWidth: '2px' }} fullWidth>
+                <Typography variant="body1" sx={{ textTransform: 'none' }}>
+                  Quotes
+                </Typography>
+              </Button>
+            </ListItemButton>
+          </ListItem>
+        </Link>
+        <Link href="/aboutMe" passHref>
+          <ListItem disablePadding>
+            <ListItemButton component="a">
+              <Button variant="outlined" style={{ borderWidth: '2px' }} fullWidth>
+                <Typography variant="body1" sx={{ textTransform: 'none' }}>
+                  About Me
+                </Typography>
+              </Button>
+            </ListItemButton>
+          </ListItem>
+        </Link>
+
+        {/* Dynamically rendered external links from the backend */}
+        {externalLinks.map((link) => (
+          <ListItem key={link.id} disablePadding>
+            <ListItemButton component="a" href={link.linkUrl} target="_blank" rel="noopener noreferrer">
+              <Button variant="outlined" style={{ borderWidth: '2px' }} fullWidth>
+                <Typography variant="body1" sx={{ textTransform: 'none' }}>
+                  {link.linkName}
+                </Typography>
+              </Button>
+            </ListItemButton>
+          </ListItem>
         ))}
+
         {isLoggedIn && (
           <Link key="admin-dashboard" href="/admin/dashboard" passHref>
             <ListItem disablePadding>
