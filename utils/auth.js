@@ -44,9 +44,7 @@ const updateUser = async (id, updatedUser) => {
 
 const checkUser = async () => {
   try {
-    const response = await client.get('/auth/check', {
-    });
-
+    const response = await client.get('/auth/check');
     return response.data;
   } catch (error) {
     return { isLoggedIn: false };
