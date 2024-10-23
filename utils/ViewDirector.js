@@ -4,7 +4,7 @@ import { useAuth } from './context/authContext';
 import Loading from '../components/Loading';
 import NavBar from '../components/drawers/NavBar';
 
-const ViewDirectorBasedOnUserAuthStatus = ({ component: Component, pageProps }) => {
+function ViewDirectorBasedOnUserAuthStatus({ component: Component, pageProps }) {
   const { user, loading } = useAuth();
   const router = useRouter();
 
@@ -28,7 +28,7 @@ const ViewDirectorBasedOnUserAuthStatus = ({ component: Component, pageProps }) 
       </div>
     </>
   );
-};
+}
 
 ViewDirectorBasedOnUserAuthStatus.propTypes = {
   component: PropTypes.func.isRequired,

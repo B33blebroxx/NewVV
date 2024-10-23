@@ -18,7 +18,6 @@ function Home() {
       setMissionStatement(statement);
     } catch (error) {
       console.error('Error fetching mission statement:', error);
-      // Handle error (e.g., show error message to user)
     }
   }, []);
 

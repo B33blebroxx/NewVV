@@ -9,7 +9,7 @@ import {
 const AuthContext = createContext();
 AuthContext.displayName = 'AuthContext';
 
-const AuthProvider = ({ children }) => {
+function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -72,7 +72,7 @@ const AuthProvider = ({ children }) => {
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
+}
 
 const useAuth = () => {
   const context = useContext(AuthContext);

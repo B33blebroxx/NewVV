@@ -1,5 +1,6 @@
 import React, {
   createContext, useState, useContext, useCallback,
+  useMemo,
 } from 'react';
 import PropTypes from 'prop-types';
 import { getExternalLinks } from '../../api/externalLinkApi';
@@ -19,8 +20,10 @@ export function ExternalLinksProvider({ children }) {
     }
   }, []);
 
+  const contextValue = useMemo(() => ({ externalLinks, refreshExternalLinks }), [externalLinks, refreshExternalLinks]);
+
   return (
-    <ExternalLinksContext.Provider value={{ externalLinks, refreshExternalLinks }}>
+    <ExternalLinksContext.Provider value={contextValue}>
       {children}
     </ExternalLinksContext.Provider>
   );
