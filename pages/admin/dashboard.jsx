@@ -79,7 +79,7 @@ export default function Dashboard() {
         <br /><br />
         <h1>Admin Dashboard</h1>
         <br /><br />
-        <h4>Welcome, {user?.username}, edit your site here!</h4>
+        <h4>Welcome {user?.username}!</h4>
         <br />
         <Divider sx={{ backgroundColor: 'black' }} />
         <br />
