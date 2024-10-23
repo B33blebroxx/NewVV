@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -15,11 +16,12 @@ import { useAuth } from '../../utils/context/authContext';
 import { useExternalLinks } from '../../utils/context/externalLinksContext';
 
 export default function ExternalLinkDialog({
-  open, onClose, linkData, refreshLinks,
+  open, onClose, linkData = null, refreshLinks = null,
 }) {
   const [linkName, setLinkName] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
   const [error, setError] = useState('');
+  const [urlError, setUrlError] = useState('');
   const { user } = useAuth();
   const { refreshExternalLinks } = useExternalLinks();
 
@@ -27,20 +29,47 @@ export default function ExternalLinkDialog({
     if (linkData) {
       setLinkName(linkData.linkName || '');
       setLinkUrl(linkData.linkUrl || '');
+      setUrlError('');
     } else {
       setLinkName('');
       setLinkUrl('');
+      setUrlError('');
     }
   }, [linkData]);
 
+  const validateUrl = (url) => {
+    if (!url) return true;
+
+    // Simple URL pattern that accepts http/https URLs
+    const urlPattern = /^https?:\/\/(?:[\w-]+\.)+[a-z]{2,}(?:\/[\w-./]*)*\/?$/i;
+    return urlPattern.test(url.trim());
+  };
+
+  const handleUrlChange = (e) => {
+    const newUrl = e.target.value;
+    setLinkUrl(newUrl);
+
+    if (newUrl && !validateUrl(newUrl)) {
+      setUrlError('Please enter a valid URL starting with http:// or https://');
+    } else {
+      setUrlError('');
+    }
+  };
+
   const handleClose = () => {
     setError('');
+    setUrlError('');
     onClose();
   };
 
   const handleSave = async () => {
     if (!linkName || !linkUrl) {
       setError('Link name and URL are required');
+      return;
+    }
+
+    if (!validateUrl(linkUrl)) {
+      setUrlError('Please enter a valid URL starting with http:// or https://');
       return;
     }
 
@@ -94,7 +123,10 @@ export default function ExternalLinkDialog({
           type="url"
           fullWidth
           value={linkUrl}
-          onChange={(e) => setLinkUrl(e.target.value)}
+          onChange={handleUrlChange}
+          error={Boolean(urlError)}
+          helperText={urlError || 'Enter complete URL (e.g., https://www.example.com)'}
+          placeholder="https://www.example.com"
         />
         {error && <Alert severity="error">{error}</Alert>}
       </DialogContent>
@@ -102,7 +134,11 @@ export default function ExternalLinkDialog({
         <Button onClick={handleClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={handleSave} color="primary">
+        <Button
+          onClick={handleSave}
+          color="primary"
+          disabled={Boolean(urlError) || !linkUrl || !linkName}
+        >
           Save
         </Button>
       </DialogActions>
@@ -119,9 +155,4 @@ ExternalLinkDialog.propTypes = {
     linkUrl: PropTypes.string,
   }),
   refreshLinks: PropTypes.func,
-};
-
-ExternalLinkDialog.defaultProps = {
-  linkData: null,
-  refreshLinks: null,
 };

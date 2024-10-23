@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -16,8 +17,8 @@ import { editMissionStatement } from '../../api/missionStatementApi';
 export default function MissionStatementDialog({
   open,
   onClose,
-  missionData,
-  refreshMissionData,
+  missionData = null,
+  refreshMissionData = null,
 }) {
   const [welcomeMessage, setWelcomeMessage] = useState('');
   const [missionStatementText, setMissionStatementText] = useState('');
@@ -141,9 +142,4 @@ MissionStatementDialog.propTypes = {
     missionStatementAcronym: PropTypes.string,
   }),
   refreshMissionData: PropTypes.func,
-};
-
-MissionStatementDialog.defaultProps = {
-  missionData: null,
-  refreshMissionData: null,
 };

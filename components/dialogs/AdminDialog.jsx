@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -14,8 +15,8 @@ import {
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { registerUser, updateUser } from '../../utils/auth';
 
-export default function AddAdminDialog({
-  existingUser, onCloseDialog, open, onSaveUser,
+export default function AdminDialog({
+  existingUser = null, onCloseDialog = null, open, onSaveUser = null,
 }) {
   const [userData, setUserData] = useState({ username: '', email: '', password: '' });
   const [error, setError] = useState('');
@@ -154,7 +155,7 @@ export default function AddAdminDialog({
   );
 }
 
-AddAdminDialog.propTypes = {
+AdminDialog.propTypes = {
   existingUser: PropTypes.shape({
     id: PropTypes.number,
     username: PropTypes.string,
@@ -163,10 +164,4 @@ AddAdminDialog.propTypes = {
   onCloseDialog: PropTypes.func,
   onSaveUser: PropTypes.func,
   open: PropTypes.bool.isRequired,
-};
-
-AddAdminDialog.defaultProps = {
-  existingUser: null,
-  onCloseDialog: null,
-  onSaveUser: null,
 };

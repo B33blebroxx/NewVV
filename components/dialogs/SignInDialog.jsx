@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -14,7 +15,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import DOMPurify from 'dompurify';
 import { signIn } from '../../utils/auth';
 
-const SignInDialog = ({ open, onClose }) => {
+function SignInDialog({ open = false, onClose = () => {} }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -85,16 +86,11 @@ const SignInDialog = ({ open, onClose }) => {
       </form>
     </Dialog>
   );
-};
+}
 
 export default SignInDialog;
 
 SignInDialog.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
-};
-
-SignInDialog.defaultProps = {
-  open: false,
-  onClose: () => {},
 };

@@ -78,9 +78,11 @@ export default function Dashboard() {
       <Box className="dashboard">
         <br /><br />
         <h1>Admin Dashboard</h1>
+        <br /><br />
+        <h4>Welcome, {user?.username}, edit your site here!</h4>
         <br />
         <Divider sx={{ backgroundColor: 'black' }} />
-        <br /><br />
+        <br />
       </Box>
 
       <Suspense fallback={<div>Loading...</div>}>
@@ -96,7 +98,6 @@ export default function Dashboard() {
               refreshMissionData={handleOpenMissionStatementDialog}
             />
           </Grid>
-
           <Grid item>
             <Button variant="contained" color="primary" onClick={handleOpenAboutMeDialog}>
               Edit About Me Page
@@ -108,7 +109,6 @@ export default function Dashboard() {
               refreshAboutMeData={handleOpenAboutMeDialog}
             />
           </Grid>
-
           <Grid item>
             <Button variant="contained" color="primary" onClick={handleOpenQuotePageDialog}>
               Edit Quote Page
@@ -120,7 +120,6 @@ export default function Dashboard() {
               onSave={handleCloseQuotePageDialog}
             />
           </Grid>
-
           <Grid item>
             <Button variant="contained" color="primary" onClick={handleOpenSupportPageDialog}>
               Edit Support Page
@@ -132,19 +131,15 @@ export default function Dashboard() {
               onSave={handleCloseSupportPageDialog}
             />
           </Grid>
-
           <Grid item>
             <QuoteListDialog userId={user?.userId} />
           </Grid>
-
           <Grid item>
             <SupportOrgListDialog userId={user?.userId} />
           </Grid>
-
           <Grid item>
             <AdminListDialog />
           </Grid>
-
           <Grid item>
             <ExternalLinkListDialog />
           </Grid>

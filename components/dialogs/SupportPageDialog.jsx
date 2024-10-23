@@ -7,7 +7,7 @@ import {
 import { getSupportPageData, editSupportPageData } from '../../api/supportPageApi'; // Assuming you have these API functions
 import { useAuth } from '../../utils/context/authContext'; // Assuming you have an Auth context for user info
 
-const EditSupportPageDialog = ({ open, onClose, onSave }) => {
+function EditSupportPageDialog({ open, onClose, onSave }) {
   const [supportPageHeader, setSupportPageHeader] = useState('');
   const [supportPageIntro, setSupportPageIntro] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -87,7 +87,7 @@ const EditSupportPageDialog = ({ open, onClose, onSave }) => {
       </DialogActions>
     </Dialog>
   );
-};
+}
 
 EditSupportPageDialog.propTypes = {
   open: PropTypes.bool.isRequired,

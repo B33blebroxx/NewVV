@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -15,7 +16,7 @@ import DOMPurify from 'dompurify';
 import { createOrg, updateOrg } from '../../api/supportOrgApi';
 
 export default function SupportOrgDialog({
-  existingOrg, onCloseDialog, open, userId, onSaveOrg,
+  existingOrg = null, onCloseDialog = null, open, userId = null, onSaveOrg = null,
 }) {
   const [orgName, setOrgName] = useState('');
   const [orgSummary, setOrgSummary] = useState('');
@@ -175,11 +176,4 @@ SupportOrgDialog.propTypes = {
   onSaveOrg: PropTypes.func,
   open: PropTypes.bool.isRequired,
   userId: PropTypes.string,
-};
-
-SupportOrgDialog.defaultProps = {
-  existingOrg: null,
-  onCloseDialog: null,
-  onSaveOrg: null,
-  userId: null,
 };

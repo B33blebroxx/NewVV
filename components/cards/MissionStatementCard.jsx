@@ -23,13 +23,5 @@ MissionStatement.propTypes = {
     missionStatementText: PropTypes.string,
     missionStatementAcronym: PropTypes.string,
     welcomeMessage: PropTypes.string,
-  }),
-};
-
-MissionStatement.defaultProps = {
-  missionStatement: {
-    missionStatementText: 'Mission Statement Text',
-    missionStatementAcronym: 'Mission Statement Acronym',
-    welcomeMessage: 'Welcome Message',
-  },
+  }).isRequired,
 };

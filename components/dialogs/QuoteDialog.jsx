@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -13,7 +14,7 @@ import DOMPurify from 'dompurify';
 import { addQuote, updateQuote } from '../../api/quoteApi';
 
 export default function QuoteDialog({
-  existingQuote, onCloseDialog, open, userId, onSaveQuote,
+  existingQuote = null, onCloseDialog = null, open, userId = null, onSaveQuote = null,
 }) {
   const [quoteData, setQuoteData] = useState({ quoteText: '', quoteAuthor: '' });
   const [error, setError] = useState('');
@@ -115,11 +116,4 @@ QuoteDialog.propTypes = {
   onSaveQuote: PropTypes.func,
   open: PropTypes.bool.isRequired,
   userId: PropTypes.string,
-};
-
-QuoteDialog.defaultProps = {
-  existingQuote: null,
-  onCloseDialog: null,
-  onSaveQuote: null,
-  userId: null,
 };
