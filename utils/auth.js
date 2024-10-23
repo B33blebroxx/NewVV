@@ -49,7 +49,6 @@ const checkUser = async () => {
 
     return response.data;
   } catch (error) {
-    console.error('Error checking login status:', error.message);
     return { isLoggedIn: false };
   }
 };

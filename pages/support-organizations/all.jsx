@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Divider } from '@mui/material';
@@ -5,7 +6,12 @@ import { getSupportPageData } from '../../api/supportPageApi';
 import { getOrgs } from '../../api/supportOrgApi';
 import OrgAccordion from '../../components/accordions/OrgAccordion';
 
-export default function SupportOrganizationsPage() {
+export default function SupportOrganizationsPage({
+  pageData: {
+    supportPageHeader = 'Support Organizations',
+    supportPageIntro = 'Find support organizations here',
+  } = {},
+}) {
   const [state, setState] = useState({
     pageData: {},
     organizations: [],
@@ -40,9 +46,9 @@ export default function SupportOrganizationsPage() {
   return (
     <Box>
       <br /><br />
-      <h1 style={{ textAlign: 'center' }}>{state.pageData.supportPageHeader}</h1>
+      <h1 style={{ textAlign: 'center' }}>{state.pageData.supportPageHeader || supportPageHeader}</h1>
       <br />
-      <h4 style={{ textAlign: 'center' }}>{state.pageData.supportPageIntro}</h4>
+      <h4 style={{ textAlign: 'center' }}>{state.pageData.supportPageIntro || supportPageIntro}</h4>
       <br />
       <Divider sx={{ backgroundColor: 'black' }} />
       <br /><br />
@@ -56,8 +62,4 @@ SupportOrganizationsPage.propTypes = {
     supportPageHeader: PropTypes.string,
     supportPageIntro: PropTypes.string,
   }),
-};
-
-SupportOrganizationsPage.defaultProps = {
-  pageData: {},
 };

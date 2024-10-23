@@ -14,10 +14,7 @@ const client = axios.create({
 // Add a response interceptor
 client.interceptors.response.use(
   (response) => response,
-  (error) => {
-    console.error('Axios error:', error.response ? error.response.data : error.message);
-    return Promise.reject(error);
-  },
+  (error) => Promise.reject(error),
 );
 
 export default client;

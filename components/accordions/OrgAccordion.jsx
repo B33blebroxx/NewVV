@@ -63,7 +63,6 @@ export default function OrgAccordion({ organizations }) {
   );
 }
 
-// Prop types for the OrgAccordion component.
 OrgAccordion.propTypes = {
   organizations: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number,
@@ -72,19 +71,5 @@ OrgAccordion.propTypes = {
     supportOrgLogo: PropTypes.string,
     supportOrgPhone: PropTypes.string,
     supportOrgUrl: PropTypes.string,
-  })),
-};
-
-// Default props for the OrgAccordion component.
-OrgAccordion.defaultProps = {
-  organizations: [
-    {
-      id: 1,
-      supportOrgName: 'Organization Name',
-      supportOrgSummary: 'Organization Summary',
-      supportOrgLogo: 'Organization Logo',
-      supportOrgPhone: 'Organization Phone',
-      supportOrgUrl: 'Organization URL',
-    },
-  ],
+  })).isRequired,
 };

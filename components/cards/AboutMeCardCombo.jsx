@@ -1,7 +1,7 @@
-import { Card, Image } from 'react-bootstrap';
+import { Image } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import {
-  Button, CardActions, CardContent, Divider,
+  Card, Button, CardActions, CardContent, Divider,
 } from '@mui/material';
 import XIcon from '@mui/icons-material/X';
 import Box from '@mui/material/Box';
@@ -36,13 +36,5 @@ AboutMeCardCombo.propTypes = {
     aboutMeText: PropTypes.string,
     aboutMeProfileLink: PropTypes.string,
     aboutMeImage: PropTypes.string,
-  }),
-};
-
-AboutMeCardCombo.defaultProps = {
-  aboutMe: {
-    aboutMeText: 'About Me Text',
-    aboutMeProfileLink: 'About Me Profile Link',
-    aboutMeImage: 'About Me Image',
-  },
+  }).isRequired,
 };

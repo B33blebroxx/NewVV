@@ -41,9 +41,9 @@ export default function QuotePage() {
     <Box>
       <Box>
         <br /><br />
-        <h1 style={{ textAlign: 'center' }}>{state.quotePage.quotePageHeader}</h1>
+        <h1 style={{ textAlign: 'center' }}>{state.quotePage.quotePageHeader || 'Quotes'}</h1>
         <br />
-        <h4 style={{ textAlign: 'center' }}>{state.quotePage.quotePageIntro}</h4>
+        <h4 style={{ textAlign: 'center' }}>{state.quotePage.quotePageIntro || 'Find quotes here'}</h4>
         <br />
         <Divider sx={{ backgroundColor: 'black' }} />
         <br /><br />
@@ -58,15 +58,9 @@ export default function QuotePage() {
 }
 
 QuotePage.propTypes = {
+  // eslint-disable-next-line react/require-default-props
   quotePage: PropTypes.shape({
     quotePageHeader: PropTypes.string,
     quotePageIntro: PropTypes.string,
   }),
-};
-
-QuotePage.defaultProps = {
-  quotePage: {
-    quotePageHeader: '',
-    quotePageIntro: '',
-  },
 };

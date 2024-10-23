@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -18,8 +19,8 @@ import { checkUser } from '../../utils/auth'; // Import checkUser API
 export default function AboutMeDialog({
   open,
   onClose,
-  aboutMeData,
-  refreshAboutMeData,
+  aboutMeData = null,
+  refreshAboutMeData = null,
 }) {
   const [aboutMeHeader, setAboutMeHeader] = useState('');
   const [aboutMeText, setAboutMeText] = useState('');
@@ -183,9 +184,4 @@ AboutMeDialog.propTypes = {
     aboutMeProfileLink: PropTypes.string,
   }),
   refreshAboutMeData: PropTypes.func,
-};
-
-AboutMeDialog.defaultProps = {
-  aboutMeData: null,
-  refreshAboutMeData: null,
 };

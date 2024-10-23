@@ -7,7 +7,7 @@ import {
 import { getQuotePageInfo, editQuotePageInfo } from '../../api/quotePageApi';
 import { useAuth } from '../../utils/context/authContext'; // Assuming you have an Auth context for user info
 
-const EditQuotePageDialog = ({ open, onClose, onSave }) => {
+function EditQuotePageDialog({ open, onClose, onSave }) {
   const [quotePageHeader, setQuotePageHeader] = useState('');
   const [quotePageIntro, setQuotePageIntro] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -87,7 +87,7 @@ const EditQuotePageDialog = ({ open, onClose, onSave }) => {
       </DialogActions>
     </Dialog>
   );
-};
+}
 
 EditQuotePageDialog.propTypes = {
   open: PropTypes.bool.isRequired,
