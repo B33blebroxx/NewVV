@@ -1,7 +1,7 @@
 import { Image } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import {
-  Card, Button, CardActions, CardContent, Divider,
+  Card, Button, CardContent, Divider,
 } from '@mui/material';
 import XIcon from '@mui/icons-material/X';
 import Box from '@mui/material/Box';
@@ -18,14 +18,17 @@ export default function AboutMeCardCombo({ aboutMe }) {
           <h5>
             {aboutMe.aboutMeText}
           </h5>
+          <Divider sx={{ backgroundColor: 'black', margin: '20px 0' }} />
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Button
+              variant="text"
+              color="inherit"
+              onClick={() => { window.location.href = aboutMe.aboutMeProfileLink; }}
+            >
+              <XIcon />
+            </Button>
+          </Box>
         </CardContent>
-        <Divider sx={{ backgroundColor: 'black' }} />
-        <br />
-        <CardActions sx={{ alignSelf: 'center' }}>
-          <Button variant="text" color="inherit" onClick={() => { window.location.href = aboutMe.aboutMeProfileLink; }}>
-            <XIcon />
-          </Button>
-        </CardActions>
       </Card>
     </Box>
   );
