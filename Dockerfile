@@ -1,5 +1,5 @@
 # Application Dockerfile
-FROM ubuntu:20.04
+FROM ubuntu:18.04
 
 # Install Node.js 18
 ENV DEBIAN_FRONTEND=noninteractive
