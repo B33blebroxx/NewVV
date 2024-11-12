@@ -1,12 +1,15 @@
 # Application Dockerfile
 FROM ubuntu:20.04
 
-# Install Node.js 18 and necessary dependencies
+# Install Node.js 18
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
-    apt-get install -y software-properties-common && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get install -y nodejs=16.* python3 make gcc build-essential
+    apt-get install -y curl && \
+    curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs
+
+# Install necessary dependencies
+RUN apt-get install -y python3 make gcc g++ build-essential
 
 # Set memory limits and environment variables
 ENV NODE_OPTIONS=--max-old-space-size=8192
