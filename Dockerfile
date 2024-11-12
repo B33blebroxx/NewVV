@@ -2,6 +2,7 @@
 FROM ubuntu:20.04
 
 # Install Node.js 20 and necessary dependencies
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs python3 make gcc build-essential
