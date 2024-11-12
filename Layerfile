@@ -1,0 +1,18 @@
+# Use Ubuntu 18.04 for the webapp.io Layerfile
+FROM vm/ubuntu:18.04
+
+# Install Docker
+RUN apt-get update && apt-get install -y docker.io
+
+# Copy the Dockerfile and application files into the image
+COPY Dockerfile .
+COPY . /app
+
+# Build the Docker image
+RUN docker build -t myapp /app
+
+# Run the Docker container in the background
+RUN BACKGROUND docker run -p 3000:3000 myapp
+
+# Expose the website on port 3000
+EXPOSE WEBSITE http://localhost:3000
