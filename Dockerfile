@@ -1,19 +1,8 @@
 # Application Dockerfile
-FROM ubuntu:18.04
-
-# Install Node.js 18
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && \
-    apt-get install -y curl && \
-    curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs
+FROM node:18-alpine
 
 # Install necessary dependencies
-RUN apt-get install -y python3 make gcc g++ build-essential
-
-# Set memory limits and environment variables
-ENV NODE_OPTIONS=--max-old-space-size=8192
-ENV NODE_ENV=production
+RUN apk add --no-cache python3 make gcc g++ git
 
 # Set the working directory
 WORKDIR /app
