@@ -4,8 +4,9 @@ FROM ubuntu:20.04
 # Install Node.js 20 and necessary dependencies
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
-    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y nodejs python3 make gcc build-essential
+    apt-get install -y software-properties-common && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get install -y nodejs=20.0.* python3 make gcc build-essential
 
 # Set memory limits and environment variables
 ENV NODE_OPTIONS=--max-old-space-size=8192
