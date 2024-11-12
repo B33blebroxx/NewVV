@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && \
     apt-get install -y software-properties-common && \
     add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get install -y nodejs=18.* python3 make gcc build-essential
+    apt-get install -y nodejs=16.* python3 make gcc build-essential
 
 # Set memory limits and environment variables
 ENV NODE_OPTIONS=--max-old-space-size=8192
